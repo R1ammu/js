@@ -1,7 +1,57 @@
-// a way for user to input his choise
-// a placeholder for users imput
+const human = getInput()
+const computer = getRPS()
 
 
-let userImput = prompt('rock, paper or scissors?', '')
+// User output
+function getInput(userInput) {
+    userInput = prompt('rock, paper, scissors!')
+    if ( userInput === 'rock' || userInput === 'paper' || userInput === 'scissors') {
+        return userInput
+    } else {
+        while ( userInput !== 'rock' || userInput !== 'paper' || userInput !== 'scissors') {
+            userInput = prompt('You have to type either "rock", "paper" or "scissors"')
+            if ( userInput === 'rock' || userInput === 'paper' || userInput === 'scissors') {
+                return userInput
+            }
+        }
+    }
+}
 
-console.log(userImput)
+// GPT CODE 
+// function getImput() {
+//     let userImput = prompt('rock, paper, scissors!');
+//     while (userImput !== 'rock' && userImput !== 'paper' && userImput !== 'scissors') {
+//         userImput = prompt('You have to type either "rock", "paper" or "scissors"');
+//     }
+//     return userImput;
+// }
+
+
+// Computer output
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
+function getRPS() {
+    const randomInt = getRandomInt(1, 3);
+    let computerInput
+    if (randomInt === 1) {
+       computerInput = "rock"
+    } else if (randomInt === 2) {
+        computerInput = "paper"
+    } else if (randomInt === 3) {
+        computerInput = "scissors"
+    }
+    return computerInput
+}
+
+
+// Winner determenator
+function getWinner(winner, loser) {
+
+}
+
+console.log(human)
+console.log(computer)
