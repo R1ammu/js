@@ -22,3 +22,5 @@ function getRPS(getRandomInt) {
 }
   
 getRPS(getRandomInt(1, 3))
+
+// CONVERT upper function so that it displays the result on the web instead of the console.
