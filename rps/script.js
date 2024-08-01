@@ -3,7 +3,16 @@ function getRandomInt() {
     const max = 3;
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-console.log(getRandomInt())
+
+
 function getComputerChoice() {
-    
+    if (getRandomInt() === 1) {
+        return 'rock'
+    } else if (getRandomInt() === 2) {
+        return 'paper'
+    } else {
+        return 'scissors'
+    }
 }
+
+console.log(getComputerChoice())
