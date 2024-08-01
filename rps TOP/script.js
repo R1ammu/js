@@ -1,3 +1,7 @@
+let humanScore = 0
+let computerScore = 0
+
+
 function getRandomInt() {
     const min = 1;
     const max = 3;
@@ -14,8 +18,6 @@ function getComputerChoice() {
     }
 }
 
-
-
 function getHumanChoice() {
     let userInput = prompt('rock, paper, scissors!');
     userInput = userInput.toLowerCase();
@@ -25,5 +27,27 @@ function getHumanChoice() {
     return userInput;
 }
 
-console.log(getHumanChoice())
-console.log(getComputerChoice())
+function playRound(humanChoice, computerChoice) {
+    humanChoice = getHumanChoice()
+    computerChoice = getComputerChoice()
+
+    if (humanChoice === computerChoice) {
+        return 'ROUND DRAWN!';
+    } else if ((humanChoice === 'rock' && computerChoice === 'scissors') ||
+    (humanChoice === 'paper' && computerChoice === 'rock') ||
+    (humanChoice === 'scissors' && computerChoice === 'paper')) {
+        return 'ROUND WON!';
+    } else {
+        return 'ROUND LOST.'
+    }
+}
+
+console.log(playRound())
+
+
+
+
+
+
+// console.log(getHumanChoice())
+// console.log(getComputerChoice())
