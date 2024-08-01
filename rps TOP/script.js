@@ -1,7 +1,3 @@
-let humanScore = 0
-let computerScore = 0
-
-
 function getRandomInt() {
     const min = 1;
     const max = 3;
@@ -41,13 +37,3 @@ function playRound(humanChoice, computerChoice) {
         return 'ROUND LOST.'
     }
 }
-
-console.log(playRound())
-
-
-
-
-
-
-// console.log(getHumanChoice())
-// console.log(getComputerChoice())
