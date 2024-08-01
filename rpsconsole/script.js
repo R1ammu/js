@@ -49,9 +49,25 @@ function getRPS() {
 
 
 // Winner determenator
-function getWinner(winner, loser) {
-
+function getWinnerEasy() {
+    if (human === 'rock' && computer === 'scissors' || 
+        human === 'paper' && computer === 'rock' ||
+        human === 'scissors' && computer === 'paper') {
+            console.log('YOU WON!')
+    } else if (human === 'rock' && computer === 'rock' || 
+               human === 'paper' && computer === 'paper' ||
+               human === 'scissors' && computer === 'scissors') {
+                    console.log('A DRAW.')
+    } else { 
+        console.log('YOU LOST.')
+    }
 }
 
-console.log(human)
-console.log(computer)
+
+function rockPaperScissorsConsole () {
+    console.log('You played ' + human)
+    console.log('Your opponent played ' + computer)
+    getWinnerEasy()
+}
+
+rockPaperScissorsConsole()
