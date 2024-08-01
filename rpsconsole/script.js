@@ -1,7 +1,6 @@
 const human = getInput()
 const computer = getRPS()
 
-
 // User output
 function getInput(userInput) {
     userInput = prompt('rock, paper, scissors!')
@@ -16,16 +15,6 @@ function getInput(userInput) {
         }
     }
 }
-
-// GPT CODE 
-// function getImput() {
-//     let userImput = prompt('rock, paper, scissors!');
-//     while (userImput !== 'rock' && userImput !== 'paper' && userImput !== 'scissors') {
-//         userImput = prompt('You have to type either "rock", "paper" or "scissors"');
-//     }
-//     return userImput;
-// }
-
 
 // Computer output
 function getRandomInt(min, max) {
@@ -47,7 +36,6 @@ function getRPS() {
     return computerInput
 }
 
-
 // Winner determenator
 function getWinnerEasy() {
     if (human === 'rock' && computer === 'scissors' || 
@@ -63,11 +51,65 @@ function getWinnerEasy() {
     }
 }
 
-
 function rockPaperScissorsConsole () {
     console.log('You played ' + human)
     console.log('Your opponent played ' + computer)
     getWinnerEasy()
 }
 
+// Run the game
 rockPaperScissorsConsole()
+
+
+
+// GPT CODE
+// Function to get user input
+function getInput() {
+    let userInput = prompt('rock, paper, scissors!');
+    while (userInput !== 'rock' && userInput !== 'paper' && userInput !== 'scissors') {
+        userInput = prompt('You have to type either "rock", "paper" or "scissors"');
+    }
+    return userInput;
+}
+
+// Function to generate a random integer between min and max (inclusive)
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Function to get the computer's choice
+function getRPS() {
+    const randomInt = getRandomInt(1, 3);
+    if (randomInt === 1) return "rock";
+    if (randomInt === 2) return "paper";
+    return "scissors";
+}
+
+// Function to determine the winner
+function getWinnerEasy(human, computer) {
+    if (human === computer) {
+        return 'A DRAW.';
+    } else if (
+        (human === 'rock' && computer === 'scissors') ||
+        (human === 'paper' && computer === 'rock') ||
+        (human === 'scissors' && computer === 'paper')
+    ) {
+        return 'YOU WON!';
+    } else {
+        return 'YOU LOST.';
+    }
+}
+
+// Main function to play the game
+function rockPaperScissorsConsole() {
+    const human = getInput();
+    const computer = getRPS();
+    console.log('You played: ' + human);
+    console.log('Your opponent played: ' + computer);
+    console.log(getWinnerEasy(human, computer));
+}
+
+// Run the game
+rockPaperScissorsConsole();
