@@ -6,10 +6,13 @@ function getRandomInt() {
 
 function getComputerChoice() {
     if (getRandomInt() === 1) {
+        console.log('opponent picked rock')
         return 'rock'
     } else if (getRandomInt() === 2) {
+        console.log('opponent picked paper')
         return 'paper'
     } else {
+        console.log('opponent picked scissors')
         return 'scissors'
     }
 }
@@ -22,6 +25,15 @@ function getHumanChoice() {
     }
     return userInput;
 }
+
+
+
+
+
+
+
+
+
 
 function playRound(humanChoice, computerChoice) {
     humanChoice = getHumanChoice()
@@ -37,3 +49,15 @@ function playRound(humanChoice, computerChoice) {
         return 'ROUND LOST.'
     }
 }
+
+
+console.log(playRound())
+
+
+
+
+
+
+// if human = computer = draw
+//     human > computer = winner 
+// else loser
