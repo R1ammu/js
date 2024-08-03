@@ -6,13 +6,13 @@ function getRandomInt() {
 
 function getComputerChoice() {
     if (getRandomInt() === 1) {
-        console.log('opponent picked rock')
+        console.log('Opponent picked rock')
         return 'rock'
     } else if (getRandomInt() === 2) {
-        console.log('opponent picked paper')
+        console.log('Opponent picked paper')
         return 'paper'
     } else {
-        console.log('opponent picked scissors')
+        console.log('Opponent picked scissors')
         return 'scissors'
     }
 }
@@ -22,42 +22,62 @@ function getHumanChoice() {
     userInput = userInput.toLowerCase();
     while (userInput !== 'rock' && userInput !== 'paper' && userInput !== 'scissors') {
         userInput = prompt('You have to type either "rock", "paper" or "scissors"').toLowerCase();
+    } if (userInput === 'rock') {
+        console.log('You picked rock')
+        return userInput;
+    } else if (userInput === 'paper') {
+        console.log('You picked paper')
+        return userInput;
+    } else {
+        console.log('You picked scissors')
+        return userInput;
     }
-    return userInput;
 }
-
-
-
-
-
-
-
-
-
 
 function playRound(humanChoice, computerChoice) {
     humanChoice = getHumanChoice()
     computerChoice = getComputerChoice()
 
     if (humanChoice === computerChoice) {
-        return 'ROUND DRAWN!';
+        console.log('ROUND DRAWN.')
+        return 'draw';
     } else if ((humanChoice === 'rock' && computerChoice === 'scissors') ||
     (humanChoice === 'paper' && computerChoice === 'rock') ||
     (humanChoice === 'scissors' && computerChoice === 'paper')) {
-        return 'ROUND WON!';
+        console.log('ROUND WON.')
+        return 'win';
     } else {
-        return 'ROUND LOST.'
+        console.log('ROUND LOST.')
+        return 'loss';
+    }
+}
+
+function playGame() {
+    let humanScore = 0 
+    let computerScore = 0
+        while (humanScore < 5 && computerScore < 5) {
+            result = playRound() 
+            if (result === 'win') {
+                humanScore++
+                console.log('Your score is ' + humanScore)
+                console.log('Your opponents score is ' + computerScore)
+            } else if (result === 'loss') {
+                computerScore++
+                console.log('Your score is ' + humanScore)
+                console.log('Your opponents score is ' + computerScore)
+            } else {
+                console.log('Your score is ' + humanScore)
+                console.log('Your opponents score is ' + computerScore)
+        }
+    } if (humanScore === 5) {
+        console.log('YOU WON THE GAME!')
+    } else {
+        console.log('YOU LOST.')
     }
 }
 
 
-console.log(playRound())
 
 
 
-
-
-
-// if human = computer = draw
-//     human > computer = winner 
-// else loser
+console.log(playGame())
