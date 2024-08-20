@@ -24,10 +24,11 @@ body {
 }
 
 input {
-    border-radius: 10px;
+    border: black solid 3px;
+    border-radius: 15px;
     text-align: center;
-    height: 50px;
-    width: 100px;
+    height: 60px;
+    width: 120px;
     font-size: 40px;
 }
 
@@ -37,10 +38,16 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 button {
-    border-radius: 10px;
-    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 30px;
+    background-color: #008CBA;
+    color: white;
     font-size: 28px;
     font-weight: 500;
-    width: 100px;
-    height: 50px;
+    width: 120px;
+    height: 60px;
 }

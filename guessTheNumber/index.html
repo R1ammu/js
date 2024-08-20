@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="script.js" defer></script>
+    <title>Guess The Number</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
     <h1>Guess The Number</h1>
-
     <h2>A number between 1 and 100 has been generated,<br> lets see if you can guess the number in 10 tries or less.</h2>
+    
     <div class="hl" id="ph"></div>
+    
     <div class="container">
-        <input type="number" id="userImput" min="1" max="100">
-        <button id="check">Check</button>
+        <input type="number" id='userInput' min="1" max="100">
+        <button id="submit"><i class="ri-question-mark"></i></button>
+        <button id="restart"><i class="ri-repeat-line"></i></button>    
     </div>
+    
+    <script src="script.js" defer></script>
 </body>
 </html>
