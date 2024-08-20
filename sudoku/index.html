@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="icon" href="img/grid-fill.svg">
+    <title>Sudoku</title>
+</head>
+<body>
+
+    <header>
+        <h1>
+            Sudoku Solver
+        </h1>
+    </header>
+
+    <main>
+        <div class="sudokuGrid">
+            <div class="boxOne">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxTwo">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxThree">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxFour">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxFive">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxSix">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxSeven">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxEight">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+            <div class="boxNine">
+                <input type="number" id="ph1" min="1" max="9">
+                <input type="number" id="ph2" min="1" max="9">
+                <input type="number" id="ph3" min="1" max="9">
+                <input type="number" id="ph4" min="1" max="9">
+                <input type="number" id="ph5" min="1" max="9">
+                <input type="number" id="ph6" min="1" max="9">
+                <input type="number" id="ph7" min="1" max="9">
+                <input type="number" id="ph8" min="1" max="9">
+                <input type="number" id="ph9" min="1" max="9">
+            </div>
+        </div>
+        <div class="controls">
+            <button class="erase">Erase</button>
+            <button class="solve">Solve</button>
+            <button class="newGame">New Game</button>
+
+        </div>
+    </main>
+    <script src="index.js"></script>
+    <script src="functions.js"></script>
+</body>
+</html>
