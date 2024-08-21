@@ -18,18 +18,27 @@ function getRandomInt() {
 }
 
 function compare() {
+    let attempts = 0
     const number = getRandomInt()
     document.getElementById('submit').onclick = function() {
+        attempts++;
         let userValue = getUserInt();
 
+    console.log(number)
+
     if (userValue < number) {
-       console.log("Too low.")
+       document.getElementById('ph').innerText = "Too low."
     } else if (userValue > number) {
-        console.log("Too high.")
-    } else {
-        console.log("Congradulations, you guessed the number!")
-    }
+       document.getElementById('ph').innerText = "Too high."
+    } else if (userValue === number && attempts <= 5) {
+       document.getElementById('ph').innerText = `Congratulations you guessed the number in ${attempts} tries!`
+    } else document.getElementById('ph').innerText = "Congratulations you guessed the number,\n now try to guess it in less than 5 attempts."
     }
 }
 
-console.log(compare())
+
+function play() {
+    compare()
+}
+
+play()
