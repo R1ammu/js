@@ -1,0 +1,83 @@
+:root {
+    --dark: #171717;
+    --mid: #212121;
+    --light: #2F2F2F;
+    --white: #ECECEC;
+}
+
+* {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    box-sizing: border-box;
+    padding: 0%;
+    margin: 0%;
+    /* border: 1px dotted red; */
+}
+
+button {
+    cursor: pointer;
+}
+
+body {
+    background-color: var(--dark);
+
+    height: 100vh;
+    width: 100vw;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    background-color: var(--dark);
+
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.container hr {
+    width: 95%;
+    height: 2px;
+    border: none;
+    background-color: rgb(190, 25, 25);
+    align-self: center;
+    position: absolute;
+}
+
+.itemPH {
+    background-color: var(--light);
+    color: var(--white);
+
+    border-radius: 50px;
+    height: 30%;
+    width: 90%;
+
+    display: flex;
+    justify-content: start;
+    padding: 2% 0% 0% 6%;
+    font-size: 24px;
+}
+
+.controls {
+    display: flex;
+    justify-content: end;
+}
+
+.add, .sub, .edit {
+    background-color: var(--mid);
+    color: var(--white);
+    font-size: 32px;
+
+
+    border: 0;
+    padding: 16px 32px;
+    margin: 0px 20px 20px 0px;
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
