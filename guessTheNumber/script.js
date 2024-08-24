@@ -17,6 +17,7 @@ function getRandomInt() {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
 function compare() {
     let attempts = 0
     const number = getRandomInt()
@@ -26,19 +27,29 @@ function compare() {
 
     console.log(number)
 
-    if (userValue < number) {
-       document.getElementById('ph').innerText = "Too low."
-    } else if (userValue > number) {
-       document.getElementById('ph').innerText = "Too high."
-    } else if (userValue === number && attempts <= 5) {
-       document.getElementById('ph').innerText = `Congratulations you guessed the number in ${attempts} tries!`
-    } else document.getElementById('ph').innerText = "Congratulations you guessed the number,\n now try to guess it in less than 5 attempts."
+        if (userValue < number) {
+            document.getElementById('ph').innerText = "Too low."
+        } else if (userValue > number) {
+            document.getElementById('ph').innerText = "Too high."
+        } else if (userValue === number && attempts <= 5) {
+            document.getElementById('ph').innerText = `Congratulations you guessed the number in ${attempts} tries!`
+        } else document.getElementById('ph').innerText = "Congratulations you guessed the number,\n now try to guess it in less than 5 attempts."
     }
 }
 
 
+
 function play() {
     compare()
+    document.getElementById('restart').onclick = function() {
+        compare();
+    }
 }
 
+
+
 play()
+
+// attempts 5
+// on click "restart" empty input placeholder, get new number, set 
+// on click "guess" empty input placeholder 
