@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4em;
+    background-color: black;
+    height: 100%;
+}
+
+audio {
+    display: none;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    background-color: black;
+    border: 5px solid white;
+    height: 150px;
+    width: 150px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+}
