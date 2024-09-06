@@ -1,37 +1,47 @@
-* {
-    box-sizing: border-box;
-    border: 0;
-    margin: 0;
+/* WAITING TO CHANGE THIS, IT CURRENTLY CROSSES OVER A TASK  */
+
+#tasks {
+    list-style: none;
     padding: 0;
 }
 
-html, body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: black;
-    height: 100%;
-}
-
-audio {
-    display: none;
-}
-
-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    color: white;
-    background-color: black;
-    border: 5px solid white;
-    height: 150px;
-    width: 150px;
-    border-radius: 25px;
+#tasks li {
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: white;
-    color: black;
+#tasks li.completed {
+    text-decoration: line-through;
+    background-color: #d3d3d3;
 }
+
+#taskInput {
+    margin: 10px 0;
+}
+
+* {
+    display: flex;
+    flex: 1;
+}
+
+.taskListContainer, .timerContainer, .playerContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 2em;
+}
+/* 
+.timerContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.playerContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+} */
