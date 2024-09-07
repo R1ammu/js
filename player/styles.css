@@ -24,6 +24,32 @@ body {
     flex: 1;
 }
 
+/* Center tasks horizontally */
+.taskListContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center tasks horizontally */
+    width: 100%; /* Ensure container takes full width */
+    padding: 0 20px; /* Optional: Add some padding to the sides */
+}
+
+#tasks {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Full width to accommodate task input width */
+    display: flex; /* Use flexbox for horizontal centering */
+    flex-direction: column; /* Stack tasks vertically */
+    align-items: center; /* Center tasks horizontally */
+}
+
+#tasks li {
+    cursor: pointer; /* Change cursor to pointer */
+    margin-bottom: 30px; /* Add 30px margin between tasks */
+    text-align: center; /* Center text in tasks */
+}
+
+/* Timer Button Styles */
 .timerContainer button {
     cursor: pointer;
     border: white 4px solid;
@@ -83,28 +109,12 @@ body {
     color: #FF4F00;
 }
 
-#tasks {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    width: 100%; /* Full width to accommodate task input width */
-}
-
-#tasks li {
-    cursor: pointer; /* Change cursor to pointer */
-    margin-bottom: 30px; /* Add 30px margin between tasks */
-}
-
 /* Task Input */
 #taskInput {
     height: 60px; /* Set height of input */
     width: 100%; /* Ensure input is full width */
     margin-top: 10px; /* Space between input and tasks */
-}
-
-/* Move the input below tasks */
-.taskListContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    text-align: center; /* Center text in input */
+    padding: 0 10px; /* Padding to ensure text doesn’t touch the edges */
+    box-sizing: border-box; /* Include padding in width calculation */
 }

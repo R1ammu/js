@@ -1,7 +1,6 @@
 // TASK LIST
 const taskInput = document.getElementById('taskInput');
 const tasksUl = document.getElementById('tasks');
-const removeAllButton = document.getElementById('removeAllButton'); // Get reference to Remove All button
 
 // Function to save tasks to localStorage
 function saveTasks(tasks) {
@@ -18,19 +17,20 @@ function loadTasks() {
 function renderTasks(tasks) {
     tasksUl.innerHTML = '';
 
-    // Render all tasks
-    tasks.forEach((task, index) => {
+    // Render up to 10 most recent tasks
+    const tasksToRender = tasks.slice(0, 10);
+    tasksToRender.forEach((task, index) => {
         const li = document.createElement('li');
         li.textContent = task.text;
         if (task.completed) {
             li.classList.add('completed-task');
         }
 
-        // Toggle task completion on click
+        // Remove task on click
         li.addEventListener('click', () => {
-            tasks[index].completed = !tasks[index].completed; // Toggle completion status
-            saveTasks(tasks);
-            renderTasks(tasks);
+            tasks.splice(index, 1); // Remove task from array
+            saveTasks(tasks); // Update localStorage
+            renderTasks(tasks); // Re-render task list
         });
 
         // Prepend new tasks to the beginning of the list
@@ -44,6 +44,10 @@ renderTasks(tasks);
 
 // Function to add a task
 function addTask() {
+    if (tasks.length >= 10) {
+        return; // Prevent adding new tasks if there are already 10
+    }
+
     const taskText = taskInput.value.trim();
     if (taskText) {
         tasks.unshift({ text: taskText, completed: false }); // Add new tasks at the beginning
@@ -59,13 +63,3 @@ taskInput.addEventListener('keydown', (event) => {
         addTask();
     }
 });
-
-// Function to remove all tasks
-function removeAllTasks() {
-    tasks = []; // Clear tasks array
-    saveTasks(tasks); // Update localStorage
-    renderTasks(tasks); // Re-render task list
-}
-
-// Remove All Button Event Listener
-removeAllButton.addEventListener('click', removeAllTasks);
