@@ -1,9 +1,11 @@
 // PLAYER
 let isPlaying = false;
+const audioElement = document.querySelector('#brownNoise');
+const notificationSound = new Audio('/js/player/audio/level-up-191997.mp3');
 
 // Play or Pause the audio
 document.querySelector('#audioPlayButton').addEventListener('click', function () {
-    const audioElement = document.querySelector('#myAudio');
+    console.log('Audio play button clicked');
     isPlaying ? audioElement.pause() : audioElement.play();
     isPlaying = !isPlaying;
 });
@@ -22,8 +24,6 @@ const startButton = document.getElementById('startButton');
 const stopButton = document.getElementById('stopButton');
 const resetButton = document.getElementById('resetButton');
 const dots = document.querySelectorAll('.dot');
-const audioElement = document.querySelector('#myAudio');
-const notificationSound = new Audio('/js/player/audio/level-up-191997.mp3');
 
 // Function to update the timer display
 function updateTimerDisplay(timeLeft) {
@@ -36,8 +36,10 @@ function updateTimerDisplay(timeLeft) {
 // Function to start the timer
 function startTimer(duration) {
     let timeLeft = duration;
+    console.log('Timer started');
 
     updateTimerDisplay(timeLeft); // Immediately update the display
+    audioElement.play(); // Start brown noise when timer starts
 
     interval = setInterval(() => {
         timeLeft--;
@@ -52,6 +54,7 @@ function startTimer(duration) {
 
 // Handle what happens when the timer completes
 function handleTimerCompletion() {
+    console.log('Timer completed');
     notificationSound.play(); // Play notification sound
 
     if (isWorkPeriod) {
@@ -90,21 +93,23 @@ function resetPomodoroDots() {
 
 // Start Button Event
 startButton.addEventListener('click', () => {
+    console.log('Start button clicked');
     clearInterval(interval);
     isWorkPeriod = true;
     cycleCount = 0;
-    audioElement.play(); // Start brown noise when timer starts
     startTimer(workTime);
 });
 
 // Stop Button Event
 stopButton.addEventListener('click', () => {
+    console.log('Stop button clicked');
     clearInterval(interval); // Stop the timer
     audioElement.pause(); // Pause brown noise when timer stops
 });
 
 // Reset Button Event
 resetButton.addEventListener('click', () => {
+    console.log('Reset button clicked');
     clearInterval(interval);
     timerDisplay.textContent = '50:00';
     cycleCount = 0;
@@ -113,6 +118,7 @@ resetButton.addEventListener('click', () => {
     resetPomodoroDots(); // Reset progress dots
     audioElement.pause(); // Pause brown noise when timer resets
     audioElement.currentTime = 0; // Reset the audio to the beginning
+    updatePomodoroCounter(); // Update the counter display
 });
 
 // TASK LIST
@@ -195,8 +201,4 @@ function addTask() {
 }
 
 // Add Task Event: Pressing "Enter" Key
-taskInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-        addTask();
-    }
-});
+taskInput.addEventListener('keydown',
