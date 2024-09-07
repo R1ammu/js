@@ -2,9 +2,13 @@
 const audioElement = document.querySelector('#brownNoise');
 const notificationSound = new Audio('/js/player/audio/notification.mp3');
 
+// Set the volume to maximum
+audioElement.volume = 1.0;
+notificationSound.volume = 1.0;
+
 // Toggle brown noise
-function toggleBrownNoise() {
-    if (audioElement.paused) {
+function toggleBrownNoise(play) {
+    if (play) {
         audioElement.currentTime = 0; // Reset to start
         audioElement.play().catch(error => {
             console.error('Error playing audio:', error);
@@ -24,7 +28,6 @@ let pomodoroCount = 0; // Track number of completed Pomodoros
 
 const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('startButton');
-const stopButton = document.getElementById('stopButton');
 const resetButton = document.getElementById('resetButton');
 const dots = document.querySelectorAll('.dot');
 
@@ -42,10 +45,7 @@ function startTimer(duration) {
     console.log('Timer started');
 
     updateTimerDisplay(timeLeft); // Immediately update the display
-    audioElement.currentTime = 0; // Reset the audio to the beginning
-    audioElement.play().catch(error => {
-        console.error('Error playing brown noise:', error);
-    }); // Start brown noise when timer starts
+    toggleBrownNoise(true); // Start brown noise when timer starts
 
     interval = setInterval(() => {
         timeLeft--;
@@ -61,29 +61,31 @@ function startTimer(duration) {
 // Handle what happens when the timer completes
 function handleTimerCompletion() {
     console.log('Timer completed');
-    notificationSound.play().catch(error => {
-        console.error('Error playing notification sound:', error);
-    }); // Play notification sound
+    notificationSound.play(); // Play notification sound
+    toggleBrownNoise(false); // Stop brown noise
 
     if (isWorkPeriod) {
         pomodoroCount++;
         updatePomodoroDots(pomodoroCount);
 
         if (pomodoroCount === 4) {
-            alert("You've completed 4 Pomodoros! Time for a 20-minute break.");
-            startTimer(longBreakTime);
+            startBreak(longBreakTime); // Start long break after 4 Pomodoros
             pomodoroCount = 0; // Reset Pomodoro count after long break
             resetPomodoroDots();
         } else {
-            alert("Time for a 5-minute break!");
-            startTimer(shortBreakTime);
+            startBreak(shortBreakTime); // Start short break
         }
     } else {
-        alert("Work session starting again!");
-        startTimer(workTime);
+        startTimer(workTime); // Start new work session
     }
 
-    isWorkPeriod = !isWorkPeriod;
+    isWorkPeriod = !isWorkPeriod; // Toggle between work and break
+}
+
+// Function to start break automatically
+function startBreak(breakTime) {
+    toggleBrownNoise(false); // Stop brown noise for breaks
+    startTimer(breakTime); // Start the break timer
 }
 
 // Update Pomodoro progress dots based on completed sessions
@@ -103,15 +105,7 @@ startButton.addEventListener('click', () => {
     console.log('Start button clicked');
     clearInterval(interval);
     isWorkPeriod = true;
-    pomodoroCount = 0;
     startTimer(workTime);
-});
-
-// Stop Button Event
-stopButton.addEventListener('click', () => {
-    console.log('Stop button clicked');
-    clearInterval(interval); // Stop the timer
-    audioElement.pause(); // Pause brown noise when timer stops
 });
 
 // Reset Button Event
@@ -122,12 +116,9 @@ resetButton.addEventListener('click', () => {
     isWorkPeriod = true;
     pomodoroCount = 0; // Reset Pomodoro count
     resetPomodoroDots(); // Reset progress dots
-    audioElement.pause(); // Pause brown noise when timer resets
+    toggleBrownNoise(false); // Stop brown noise when resetting
     audioElement.currentTime = 0; // Reset the audio to the beginning
-    updatePomodoroCounter(); // Update the counter display
 });
 
-// Update Pomodoro counter display
-function updatePomodoroCounter() {
-    document.getElementById('pomodoroCounter').textContent = `Pomodoros: ${pomodoroCount}`;
-}
+// Remove Stop Button (if you have it in HTML)
+document.getElementById('stopButton').style.display = 'none'; // Hide stop button
