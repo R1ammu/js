@@ -1,11 +1,11 @@
 // PLAYER
 let isPlaying = false;
-const brownNoise = new Audio('/js/player/audio/Academic Brown 1 hr Brown Noise_ A Sonic Wellness Journey Meditation, Study, Focus, Calming.mp3');
-const notificationSound = new Audio('/js/player/audio/level-up-191997.mp3');
 
+// Play or Pause the audio
 document.querySelector('#audioPlayButton').addEventListener('click', function () {
-  isPlaying ? brownNoise.pause() : brownNoise.play();
-  isPlaying = !isPlaying;
+    const audioElement = document.querySelector('#myAudio');
+    isPlaying ? audioElement.pause() : audioElement.play();
+    isPlaying = !isPlaying;
 });
 
 // TIMER
@@ -22,102 +22,97 @@ const startButton = document.getElementById('startButton');
 const stopButton = document.getElementById('stopButton');
 const resetButton = document.getElementById('resetButton');
 const dots = document.querySelectorAll('.dot');
+const audioElement = document.querySelector('#myAudio');
+const notificationSound = new Audio('/js/player/audio/level-up-191997.mp3');
 
 // Function to update the timer display
 function updateTimerDisplay(timeLeft) {
-  let minutes = Math.floor(timeLeft / 60);
-  let seconds = timeLeft % 60;
-  seconds = seconds < 10 ? '0' + seconds : seconds;
-  timerDisplay.textContent = `${minutes}:${seconds}`;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    timerDisplay.textContent = `${minutes}:${seconds}`;
 }
 
 // Function to start the timer
 function startTimer(duration) {
-  let timeLeft = duration;
-  updateTimerDisplay(timeLeft); // Immediately update the display
-  brownNoise.play(); // Start playing brown noise
+    let timeLeft = duration;
 
-  interval = setInterval(() => {
-      timeLeft--;
-      updateTimerDisplay(timeLeft);
+    updateTimerDisplay(timeLeft); // Immediately update the display
 
-      if (timeLeft < 0) {
-          clearInterval(interval);
-          brownNoise.pause(); // Pause the brown noise
-          handleTimerCompletion();
-      }
-  }, 1000);
+    interval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay(timeLeft);
+
+        if (timeLeft < 0) {
+            clearInterval(interval);
+            handleTimerCompletion();
+        }
+    }, 1000);
 }
 
 // Handle what happens when the timer completes
 function handleTimerCompletion() {
-  if (isWorkPeriod) {
-      cycleCount++;
-      pomodoroCount++;
-      updatePomodoroDots(pomodoroCount);
+    notificationSound.play(); // Play notification sound
 
-      notificationSound.play(); // Play notification sound
+    if (isWorkPeriod) {
+        cycleCount++;
+        pomodoroCount++;
+        updatePomodoroDots(pomodoroCount);
 
-      if (pomodoroCount === 4) {
-          alert("You've completed 4 Pomodoros! Time for a 20-minute break.");
-          startTimer(longBreakTime);
-          pomodoroCount = 0; // Reset Pomodoro count after long break
-          resetPomodoroDots();
-      } else {
-          alert("Time for a 5-minute break!");
-          startTimer(shortBreakTime);
-      }
-  } else {
-      alert("Work session starting again!");
-      startTimer(workTime);
-  }
+        if (pomodoroCount === 4) {
+            alert("You've completed 4 Pomodoros! Time for a 20-minute break.");
+            startTimer(longBreakTime);
+            pomodoroCount = 0; // Reset Pomodoro count after long break
+            resetPomodoroDots();
+        } else {
+            alert("Time for a 5-minute break!");
+            startTimer(shortBreakTime);
+        }
+    } else {
+        alert("Work session starting again!");
+        startTimer(workTime);
+    }
 
-  isWorkPeriod = !isWorkPeriod;
+    isWorkPeriod = !isWorkPeriod;
 }
 
 // Update Pomodoro progress dots based on completed sessions
 function updatePomodoroDots(count) {
-  if (count <= 4) {
-      const currentDot = dots[count - 1];
-      currentDot.classList.add('active');
-      setTimeout(() => {
-          currentDot.classList.remove('active');
-          currentDot.classList.add('completed');
-      }, 3000); // Time for the fade effect
-  }
+    if (count <= 4) {
+        dots[count - 1].classList.add('completed');
+    }
 }
 
 // Reset the Pomodoro progress dots to their original state
 function resetPomodoroDots() {
-  dots.forEach(dot => {
-      dot.classList.remove('completed');
-      dot.classList.remove('active');
-  });
+    dots.forEach(dot => dot.classList.remove('completed'));
 }
 
 // Start Button Event
 startButton.addEventListener('click', () => {
-  clearInterval(interval);
-  isWorkPeriod = true;
-  cycleCount = 0;
-  startTimer(workTime);
+    clearInterval(interval);
+    isWorkPeriod = true;
+    cycleCount = 0;
+    audioElement.play(); // Start brown noise when timer starts
+    startTimer(workTime);
 });
 
 // Stop Button Event
 stopButton.addEventListener('click', () => {
-  clearInterval(interval); // Stop the timer
-  brownNoise.pause(); // Pause the brown noise
+    clearInterval(interval); // Stop the timer
+    audioElement.pause(); // Pause brown noise when timer stops
 });
 
 // Reset Button Event
 resetButton.addEventListener('click', () => {
-  clearInterval(interval);
-  timerDisplay.textContent = '50:00';
-  cycleCount = 0;
-  isWorkPeriod = true;
-  pomodoroCount = 0; // Reset Pomodoro count
-  resetPomodoroDots(); // Reset progress dots
-  brownNoise.pause(); // Pause the brown noise
+    clearInterval(interval);
+    timerDisplay.textContent = '50:00';
+    cycleCount = 0;
+    isWorkPeriod = true;
+    pomodoroCount = 0; // Reset Pomodoro count
+    resetPomodoroDots(); // Reset progress dots
+    audioElement.pause(); // Pause brown noise when timer resets
+    audioElement.currentTime = 0; // Reset the audio to the beginning
 });
 
 // TASK LIST
@@ -129,59 +124,59 @@ const maxVisibleTasks = 10; // Adjust this value based on how many tasks should 
 
 // Function to save tasks to localStorage
 function saveTasks(tasks) {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 // Function to load tasks from localStorage
 function loadTasks() {
-  const savedTasks = localStorage.getItem('tasks');
-  return savedTasks ? JSON.parse(savedTasks) : [];
+    const savedTasks = localStorage.getItem('tasks');
+    return savedTasks ? JSON.parse(savedTasks) : [];
 }
 
 // Function to render tasks
 function renderTasks(tasks) {
-  tasksUl.innerHTML = '';
+    tasksUl.innerHTML = '';
 
-  // First, render incomplete tasks
-  tasks.filter(task => !task.completed).forEach((task, index) => {
-      const li = document.createElement('li');
-      li.textContent = task.text;
+    // First, render incomplete tasks
+    tasks.filter(task => !task.completed).forEach((task, index) => {
+        const li = document.createElement('li');
+        li.textContent = task.text;
 
-      // Toggle task completion on click
-      li.addEventListener('click', () => {
-          tasks[index].completed = true; // Mark task as completed
-          saveTasks(tasks);
-          renderTasks(tasks);
-      });
+        // Toggle task completion on click
+        li.addEventListener('click', () => {
+            tasks[index].completed = true; // Mark task as completed
+            saveTasks(tasks);
+            renderTasks(tasks);
+        });
 
-      tasksUl.appendChild(li);
-  });
+        tasksUl.appendChild(li);
+    });
 
-  // Then, render completed tasks at the bottom
-  tasks.filter(task => task.completed).forEach((task, index) => {
-      const li = document.createElement('li');
-      li.textContent = task.text;
-      li.classList.add('completed');
+    // Then, render completed tasks at the bottom
+    tasks.filter(task => task.completed).forEach((task, index) => {
+        const li = document.createElement('li');
+        li.textContent = task.text;
+        li.classList.add('completed');
 
-      // Toggle task completion on click
-      li.addEventListener('click', () => {
-          tasks[index].completed = false; // Unmark task as completed
-          saveTasks(tasks);
-          renderTasks(tasks);
-      });
+        // Toggle task completion on click
+        li.addEventListener('click', () => {
+            tasks[index].completed = false; // Unmark task as completed
+            saveTasks(tasks);
+            renderTasks(tasks);
+        });
 
-      tasksUl.appendChild(li);
-  });
+        tasksUl.appendChild(li);
+    });
 
-  // Check for overflow and remove oldest tasks if necessary
-  if (tasksUl.children.length > maxVisibleTasks) {
-      const overflowCount = tasksUl.children.length - maxVisibleTasks;
-      for (let i = 0; i < overflowCount; i++) {
-          tasks.shift(); // Remove oldest task from the tasks array
-      }
-      saveTasks(tasks); // Save updated tasks to localStorage
-      renderTasks(tasks); // Re-render tasks after removal
-  }
+    // Check for overflow and remove oldest tasks if necessary
+    if (tasksUl.children.length > maxVisibleTasks) {
+        const overflowCount = tasksUl.children.length - maxVisibleTasks;
+        for (let i = 0; i < overflowCount; i++) {
+            tasks.shift(); // Remove oldest task from the tasks array
+        }
+        saveTasks(tasks); // Save updated tasks to localStorage
+        renderTasks(tasks); // Re-render tasks after removal
+    }
 }
 
 // Initialize the task list
@@ -190,18 +185,18 @@ renderTasks(tasks);
 
 // Function to add a task
 function addTask() {
-  const taskText = taskInput.value.trim();
-  if (taskText) {
-      tasks.push({ text: taskText, completed: false });
-      saveTasks(tasks);
-      renderTasks(tasks);
-      taskInput.value = ''; // Clear input field
-  }
+    const taskText = taskInput.value.trim();
+    if (taskText) {
+        tasks.push({ text: taskText, completed: false });
+        saveTasks(tasks);
+        renderTasks(tasks);
+        taskInput.value = ''; // Clear input field
+    }
 }
 
 // Add Task Event: Pressing "Enter" Key
 taskInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-      addTask();
-  }
+    if (event.key === 'Enter') {
+        addTask();
+    }
 });
