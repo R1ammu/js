@@ -1,6 +1,7 @@
 // TASK LIST
 const taskInput = document.getElementById('taskInput');
 const tasksUl = document.getElementById('tasks');
+const removeAllButton = document.getElementById('removeAllButton'); // Get reference to Remove All button
 
 // Function to save tasks to localStorage
 function saveTasks(tasks) {
@@ -58,3 +59,13 @@ taskInput.addEventListener('keydown', (event) => {
         addTask();
     }
 });
+
+// Function to remove all tasks
+function removeAllTasks() {
+    tasks = []; // Clear tasks array
+    saveTasks(tasks); // Update localStorage
+    renderTasks(tasks); // Re-render task list
+}
+
+// Remove All Button Event Listener
+removeAllButton.addEventListener('click', removeAllTasks);
