@@ -1,12 +1,23 @@
 // PLAYER
-let isPlaying = false;
 const audioElement = document.querySelector('#brownNoise');
 const notificationSound = new Audio('/js/player/audio/level-up-191997.mp3');
 
+// Toggle brown noise
+function toggleBrownNoise() {
+    if (audioElement.paused) {
+        audioElement.currentTime = 0; // Reset to start
+        audioElement.play().catch(error => {
+            console.error('Error playing audio:', error);
+        });
+    } else {
+        audioElement.pause();
+    }
+}
+
 // TIMER
-let workTime = 50 * 60; // 50 minutes in seconds
-let shortBreakTime = 5 * 60; // 5 minutes in seconds
-let longBreakTime = 20 * 60; // 20 minutes in seconds
+const workTime = 50 * 60; // 50 minutes in seconds
+const shortBreakTime = 5 * 60; // 5 minutes in seconds
+const longBreakTime = 20 * 60; // 20 minutes in seconds
 let isWorkPeriod = true;
 let interval;
 let pomodoroCount = 0; // Track number of completed Pomodoros
@@ -32,7 +43,9 @@ function startTimer(duration) {
 
     updateTimerDisplay(timeLeft); // Immediately update the display
     audioElement.currentTime = 0; // Reset the audio to the beginning
-    audioElement.play(); // Start brown noise when timer starts
+    audioElement.play().catch(error => {
+        console.error('Error playing brown noise:', error);
+    }); // Start brown noise when timer starts
 
     interval = setInterval(() => {
         timeLeft--;
@@ -48,8 +61,9 @@ function startTimer(duration) {
 // Handle what happens when the timer completes
 function handleTimerCompletion() {
     console.log('Timer completed');
-    notificationSound.play(); // Play notification sound
-    audioElement.pause(); // Pause brown noise
+    notificationSound.play().catch(error => {
+        console.error('Error playing notification sound:', error);
+    }); // Play notification sound
 
     if (isWorkPeriod) {
         pomodoroCount++;
@@ -74,11 +88,9 @@ function handleTimerCompletion() {
 
 // Update Pomodoro progress dots based on completed sessions
 function updatePomodoroDots(count) {
-    dots.forEach((dot, index) => {
-        if (index < count) {
-            dot.classList.add('completed');
-        }
-    });
+    if (count <= 4) {
+        dots[count - 1].classList.add('completed');
+    }
 }
 
 // Reset the Pomodoro progress dots to their original state
@@ -91,6 +103,7 @@ startButton.addEventListener('click', () => {
     console.log('Start button clicked');
     clearInterval(interval);
     isWorkPeriod = true;
+    pomodoroCount = 0;
     startTimer(workTime);
 });
 
@@ -112,66 +125,6 @@ resetButton.addEventListener('click', () => {
     audioElement.pause(); // Pause brown noise when timer resets
     audioElement.currentTime = 0; // Reset the audio to the beginning
     updatePomodoroCounter(); // Update the counter display
-});
-
-// TASK LIST
-const taskInput = document.getElementById('taskInput');
-const tasksUl = document.getElementById('tasks');
-
-// Function to save tasks to localStorage
-function saveTasks(tasks) {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-// Function to load tasks from localStorage
-function loadTasks() {
-    const savedTasks = localStorage.getItem('tasks');
-    return savedTasks ? JSON.parse(savedTasks) : [];
-}
-
-// Function to render tasks
-function renderTasks(tasks) {
-    tasksUl.innerHTML = '';
-
-    // Render all tasks
-    tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        li.textContent = task.text;
-        if (task.completed) {
-            li.classList.add('completed');
-        }
-
-        // Toggle task completion on click
-        li.addEventListener('click', () => {
-            tasks[index].completed = !tasks[index].completed; // Toggle completion status
-            saveTasks(tasks);
-            renderTasks(tasks);
-        });
-
-        tasksUl.appendChild(li);
-    });
-}
-
-// Initialize the task list
-let tasks = loadTasks();
-renderTasks(tasks);
-
-// Function to add a task
-function addTask() {
-    const taskText = taskInput.value.trim();
-    if (taskText) {
-        tasks.push({ text: taskText, completed: false });
-        saveTasks(tasks);
-        renderTasks(tasks);
-        taskInput.value = ''; // Clear input field
-    }
-}
-
-// Add Task Event: Pressing "Enter" Key
-taskInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-        addTask();
-    }
 });
 
 // Update Pomodoro counter display
