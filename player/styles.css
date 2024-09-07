@@ -1,15 +1,19 @@
 * {
     box-sizing: border-box;
     /* border: solid red 2px; */
+    border: none;
     margin: 5px;
     padding: 0px;
 
     background-color: #212121;
     color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 30px;
 }
 
 body {
     display: flex;
+    height: 100vh;
 }
 
 .taskListContainer, .timerContainer {
@@ -37,4 +41,29 @@ body {
 
 .dot.completed {
     background-color: green;
+}
+
+.timerContainer button {
+    cursor: pointer;
+    border: white 4px solid;
+    border-radius: 20px;
+    height: 150px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.size-6 {
+    width: 120px;
+    height: 120px;
+    color: white;
+}
+
+.timerButtonsContainer {
+    display: flex;
+}
+
+#timer {
+    font-size: 150px;
 }
