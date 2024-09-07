@@ -21,17 +21,18 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex: 1;
 }
 
 /* TASKS */
 #tasks, #taskInput {
     font-size: 3em;
     font-weight: 500;
+    margin: 1em 0;
 }
 
 ul {
     list-style-type: none;
+    margin: 1em 0;
 }
 
 #taskInput {
@@ -48,8 +49,15 @@ ul {
     color: #FF4F00; /* Optional: Change color to indicate completion */
 }
 
-
 /* TIMER */
+.timerContainer button {
+    border: 8px solid white;
+    border-radius: 24px;
+    height: 120px;
+    width: 120px;
+    cursor: pointer;
+}
+
 .timerContainer button.active {
     border-color: #FF4F00;
 }
@@ -78,14 +86,11 @@ ul {
     width: 30px;
     border-radius: 50%;
     margin: 0 10px;
+    background-color: transparent; /* Default color */
 }
 
-#startButton, #pauseButton, #skipButton {
-    border: 8px solid white;
-    border-radius: 24px;
-    height: 120px;
-    width: 120px;
-    cursor: pointer;
+#startButton.active, #pauseButton.active {
+    border-color: #FF4F00;
 }
 
 .size-6 {
@@ -97,3 +102,4 @@ ul {
     font-size: 3em;
     font-weight: 500;
 }
+

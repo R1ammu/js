@@ -16,7 +16,6 @@ const pauseButton = document.getElementById('pauseButton');
 const skipButton = document.getElementById('skipButton');
 const dots = document.querySelectorAll('.dot');
 const pomodoroCounterDisplay = document.getElementById('pomodoroCounter');
-const clockElement = document.getElementById('clock');
 
 // Initialize pomodoro counter from local storage
 let allTimePomodoros = localStorage.getItem('allTimePomodoros') || 0;
@@ -29,17 +28,14 @@ function updateTimerDisplay(seconds) {
     timerDisplay.innerText = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 }
 
-// Set button colors based on timer state
-function setButtonColors(timerState) {
-    if (timerState === 'active') {
+// Update button styles
+function updateButtonStyles() {
+    if (isRunning) {
         startButton.classList.add('active');
         pauseButton.classList.remove('active');
-    } else if (timerState === 'paused') {
-        startButton.classList.remove('active');
-        pauseButton.classList.add('active');
     } else {
         startButton.classList.remove('active');
-        pauseButton.classList.remove('active');
+        pauseButton.classList.add('active');
     }
 }
 
@@ -47,8 +43,7 @@ function setButtonColors(timerState) {
 function startTimer() {
     if (!isRunning) {
         isRunning = true;
-        startButton.disabled = true; // Disable start button to prevent multiple presses
-        setButtonColors('active');
+        updateButtonStyles(); // Update button styles
         timer = setInterval(() => {
             if (pomodoroDuration > 0) {
                 pomodoroDuration--;
@@ -59,7 +54,6 @@ function startTimer() {
                 updatePomodoroCounter();
                 clearInterval(timer);
                 isRunning = false;
-                setButtonColors('inactive');
                 startBreak();
             }
         }, 1000);
@@ -71,19 +65,21 @@ function togglePause() {
     if (isRunning) {
         clearInterval(timer); // Pause the timer
         isRunning = false;
-        isPaused = true;
-        setButtonColors('paused');
     } else if (isPaused) {
         startTimer(); // Resume the timer
         isPaused = false;
     }
+    updateButtonStyles(); // Update button styles
 }
 
 // Update dots opacity
 function updateDots(timeLeft, phase) {
     let totalDuration = phase === 'pomodoro' ? 50 * 60 : (phase === 'shortBreak' ? 5 * 60 : 20 * 60);
     let progress = (totalDuration - timeLeft) / totalDuration;
-    dots[currentDot - 1].style.opacity = progress.toString();
+    for (let i = 0; i < dots.length; i++) {
+        dots[i].style.opacity = i < currentDot ? '1' : '0.3';
+        dots[i].style.backgroundColor = phase === 'pomodoro' ? '#FF4F00' : (phase === 'shortBreak' ? '#4CAF50' : '#FFC107');
+    }
 }
 
 // Skip the current break and transfer the time to the next break
@@ -92,7 +88,7 @@ function skipBreak() {
         skipTime += (currentPhase === 'shortBreak') ? shortBreakDuration : longBreakDuration;
         clearInterval(timer);
         isRunning = false;
-        setButtonColors('inactive');
+        updateButtonStyles(); // Update button styles
         if (currentPhase === 'shortBreak') {
             startLongBreak();
         } else {
@@ -162,6 +158,7 @@ updateTimerDisplay(pomodoroDuration);
 
 // Function to update the system time (without seconds)
 function updateClock() {
+    const clockElement = document.getElementById('clock');
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
