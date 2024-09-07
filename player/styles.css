@@ -1,0 +1,113 @@
+body {
+    display: flex;
+}
+
+.taskListContainer, .timerContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Pomodoro Dots */
+.dots-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.dot {
+    height: 20px;
+    width: 20px;
+    background-color: lightgray;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+.dot.completed {
+    background-color: green;
+}
+
+.dot.active {
+    animation: fade 3s infinite;
+}
+
+@keyframes fade {
+    0% {
+        background-color: lightgray;
+    }
+    50% {
+        background-color: green;
+    }
+    100% {
+        background-color: lightgray;
+    }
+}

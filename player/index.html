@@ -4,32 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
     <title>Tracker</title>
 </head>
 <body>
+    <div class="taskListContainer">
+      <h1>Task List</h1>
+      <input type="text" id="taskInput" placeholder="Enter task here...">
+      <ul id="tasks"></ul>
+    </div>
 
-  <div class="taskListContainer">
-    <h2>Task List</h2>
-    <input type="text" id="taskInput" placeholder="Enter task here...">
-    <button id="addTaskButton">Add Task</button>
-    <ul id="tasks"></ul>
-  </div>
+    <div class="timerContainer">
+      <h1>Pomodoro Timer</h1>
+      <div id="timer">50:00</div>
+      <button id="startButton">Start</button>
+      <button id="stopButton">Stop</button>
+      <button id="resetButton">Reset</button>
+      <div class="dots-container">
+          <div class="dot" id="dot1"></div>
+          <div class="dot" id="dot2"></div>
+          <div class="dot" id="dot3"></div>
+          <div class="dot" id="dot4"></div>
+      </div>
+      <div id="pomodoroCounter">Pomodoros: 0</div> <!-- Add counter here -->
+    </div>
 
-  <div class="timerContainer">
-    <h1>Pomodoro Timer</h1>
-    <p id="timer">50:00</p>
-    <button id="startButton">Start Timer</button>
-    <button id="resetButton">Reset Timer</button>
-  </div>
-    
-  <div class="playerContainer">
-    <audio id="myAudio" controls loop>
-      <source src="/js/player/audio/Academic Brown  1 hr  Brown Noise_ A Sonic Wellness Journey  Meditation, Study, Focus, Calming.mp3" type="audio/mp3">
-    </audio>
-    <button id="audioPlayButton">Play</button>
-  </div>
-
+    <!-- Add notification and brown noise audio elements -->
+    <audio id="brownNoise" src="/js/player/audio/Academic Brown 1 hr Brown Noise_ A Sonic Wellness Journey Meditation, Study, Focus, Calming.mp3"></audio>
+    <audio id="notificationSound" src="/js/player/audio/level-up-191997.mp3"></audio>
 </body>
 </html>
