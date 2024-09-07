@@ -28,19 +28,3 @@ body {
 .dot.completed {
     background-color: green;
 }
-
-.dot.active {
-    animation: fade 3s infinite;
-}
-
-@keyframes fade {
-    0% {
-        background-color: lightgray;
-    }
-    50% {
-        background-color: green;
-    }
-    100% {
-        background-color: lightgray;
-    }
-}

@@ -3,18 +3,10 @@ let isPlaying = false;
 const audioElement = document.querySelector('#brownNoise');
 const notificationSound = new Audio('/js/player/audio/level-up-191997.mp3');
 
-// Play or Pause the audio
-document.querySelector('#audioPlayButton').addEventListener('click', function () {
-    console.log('Audio play button clicked');
-    isPlaying ? audioElement.pause() : audioElement.play();
-    isPlaying = !isPlaying;
-});
-
 // TIMER
 let workTime = 50 * 60; // 50 minutes in seconds
 let shortBreakTime = 5 * 60; // 5 minutes in seconds
 let longBreakTime = 20 * 60; // 20 minutes in seconds
-let cycleCount = 0;
 let isWorkPeriod = true;
 let interval;
 let pomodoroCount = 0; // Track number of completed Pomodoros
@@ -39,6 +31,7 @@ function startTimer(duration) {
     console.log('Timer started');
 
     updateTimerDisplay(timeLeft); // Immediately update the display
+    audioElement.currentTime = 0; // Reset the audio to the beginning
     audioElement.play(); // Start brown noise when timer starts
 
     interval = setInterval(() => {
@@ -56,9 +49,9 @@ function startTimer(duration) {
 function handleTimerCompletion() {
     console.log('Timer completed');
     notificationSound.play(); // Play notification sound
+    audioElement.pause(); // Pause brown noise
 
     if (isWorkPeriod) {
-        cycleCount++;
         pomodoroCount++;
         updatePomodoroDots(pomodoroCount);
 
@@ -81,9 +74,11 @@ function handleTimerCompletion() {
 
 // Update Pomodoro progress dots based on completed sessions
 function updatePomodoroDots(count) {
-    if (count <= 4) {
-        dots[count - 1].classList.add('completed');
-    }
+    dots.forEach((dot, index) => {
+        if (index < count) {
+            dot.classList.add('completed');
+        }
+    });
 }
 
 // Reset the Pomodoro progress dots to their original state
@@ -96,7 +91,6 @@ startButton.addEventListener('click', () => {
     console.log('Start button clicked');
     clearInterval(interval);
     isWorkPeriod = true;
-    cycleCount = 0;
     startTimer(workTime);
 });
 
@@ -112,7 +106,6 @@ resetButton.addEventListener('click', () => {
     console.log('Reset button clicked');
     clearInterval(interval);
     timerDisplay.textContent = '50:00';
-    cycleCount = 0;
     isWorkPeriod = true;
     pomodoroCount = 0; // Reset Pomodoro count
     resetPomodoroDots(); // Reset progress dots
