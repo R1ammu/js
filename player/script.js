@@ -125,9 +125,6 @@ resetButton.addEventListener('click', () => {
 const taskInput = document.getElementById('taskInput');
 const tasksUl = document.getElementById('tasks');
 
-// Set a maximum number of tasks allowed on screen
-const maxVisibleTasks = 10; // Adjust this value based on how many tasks should fit on the screen
-
 // Function to save tasks to localStorage
 function saveTasks(tasks) {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -143,46 +140,23 @@ function loadTasks() {
 function renderTasks(tasks) {
     tasksUl.innerHTML = '';
 
-    // First, render incomplete tasks
-    tasks.filter(task => !task.completed).forEach((task, index) => {
+    // Render all tasks
+    tasks.forEach((task, index) => {
         const li = document.createElement('li');
         li.textContent = task.text;
-
-        // Toggle task completion on click
-        li.addEventListener('click', () => {
-            tasks[index].completed = true; // Mark task as completed
-            saveTasks(tasks);
-            renderTasks(tasks);
-        });
-
-        tasksUl.appendChild(li);
-    });
-
-    // Then, render completed tasks at the bottom
-    tasks.filter(task => task.completed).forEach((task, index) => {
-        const li = document.createElement('li');
-        li.textContent = task.text;
-        li.classList.add('completed');
-
-        // Toggle task completion on click
-        li.addEventListener('click', () => {
-            tasks[index].completed = false; // Unmark task as completed
-            saveTasks(tasks);
-            renderTasks(tasks);
-        });
-
-        tasksUl.appendChild(li);
-    });
-
-    // Check for overflow and remove oldest tasks if necessary
-    if (tasksUl.children.length > maxVisibleTasks) {
-        const overflowCount = tasksUl.children.length - maxVisibleTasks;
-        for (let i = 0; i < overflowCount; i++) {
-            tasks.shift(); // Remove oldest task from the tasks array
+        if (task.completed) {
+            li.classList.add('completed');
         }
-        saveTasks(tasks); // Save updated tasks to localStorage
-        renderTasks(tasks); // Re-render tasks after removal
-    }
+
+        // Toggle task completion on click
+        li.addEventListener('click', () => {
+            tasks[index].completed = !tasks[index].completed; // Toggle completion status
+            saveTasks(tasks);
+            renderTasks(tasks);
+        });
+
+        tasksUl.appendChild(li);
+    });
 }
 
 // Initialize the task list
@@ -201,4 +175,13 @@ function addTask() {
 }
 
 // Add Task Event: Pressing "Enter" Key
-taskInput.addEventListener('keydown',
+taskInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        addTask();
+    }
+});
+
+// Update Pomodoro counter display
+function updatePomodoroCounter() {
+    document.getElementById('pomodoroCounter').textContent = `Pomodoros: ${pomodoroCount}`;
+}
