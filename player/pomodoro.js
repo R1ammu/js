@@ -1,4 +1,3 @@
-// TIMER
 const workTime = 50 * 60; // 50 minutes in seconds
 const shortBreakTime = 5 * 60; // 5 minutes in seconds
 const longBreakTime = 20 * 60; // 20 minutes in seconds
@@ -10,6 +9,8 @@ const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('startButton');
 const resetButton = document.getElementById('resetButton');
 const dots = document.querySelectorAll('.dot');
+const brownNoise = document.getElementById('brownNoise');
+const notificationSound = document.getElementById('notificationSound');
 
 // Function to update the timer display
 function updateTimerDisplay(timeLeft) {
@@ -87,6 +88,17 @@ function activateButton(button) {
     button.classList.add('active');
 }
 
+// Function to toggle brown noise
+function toggleBrownNoise(start) {
+    if (start) {
+        brownNoise.play();
+        brownNoise.loop = true; // Ensure brown noise loops
+    } else {
+        brownNoise.pause();
+        brownNoise.currentTime = 0; // Reset brown noise to start
+    }
+}
+
 // Start Button Event
 startButton.addEventListener('click', () => {
     console.log('Start button clicked');
@@ -105,6 +117,5 @@ resetButton.addEventListener('click', () => {
     pomodoroCount = 0; // Reset Pomodoro count
     resetPomodoroDots(); // Reset progress dots
     toggleBrownNoise(false); // Stop brown noise when resetting
-    audioElement.currentTime = 0; // Reset the audio to the beginning
     activateButton(resetButton); // Activate reset button
 });
