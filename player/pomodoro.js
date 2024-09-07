@@ -4,10 +4,12 @@ const longBreakTime = 20 * 60; // 20 minutes in seconds
 let isWorkPeriod = true;
 let interval;
 let pomodoroCount = 0; // Track number of completed Pomodoros
+let isPaused = false; // Track if the timer is paused
+let remainingTime; // Track remaining time when paused
 
 const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('startButton');
-const resetButton = document.getElementById('resetButton');
+const pauseButton = document.getElementById('pauseButton');
 const dots = document.querySelectorAll('.dot');
 const brownNoise = document.getElementById('brownNoise');
 const notificationSound = document.getElementById('notificationSound');
@@ -23,18 +25,22 @@ function updateTimerDisplay(timeLeft) {
 // Function to start the timer
 function startTimer(duration) {
     let timeLeft = duration;
+    remainingTime = timeLeft; // Store remaining time
     console.log('Timer started');
 
     updateTimerDisplay(timeLeft); // Immediately update the display
     toggleBrownNoise(true); // Start brown noise when timer starts
 
     interval = setInterval(() => {
-        timeLeft--;
-        updateTimerDisplay(timeLeft);
+        if (!isPaused) { // Only decrement time if not paused
+            timeLeft--;
+            updateTimerDisplay(timeLeft);
+            remainingTime = timeLeft; // Update remaining time
 
-        if (timeLeft < 0) {
-            clearInterval(interval);
-            handleTimerCompletion();
+            if (timeLeft < 0) {
+                clearInterval(interval);
+                handleTimerCompletion();
+            }
         }
     }, 1000);
 }
@@ -83,9 +89,17 @@ function resetPomodoroDots() {
 
 // Function to activate a button
 function activateButton(button) {
-    startButton.classList.remove('active');
-    resetButton.classList.remove('active');
-    button.classList.add('active');
+    if (button === startButton) {
+        startButton.classList.add('active');
+        pauseButton.classList.remove('active');
+        startButton.classList.remove('inactive');
+        pauseButton.classList.add('inactive');
+    } else {
+        pauseButton.classList.add('active');
+        startButton.classList.remove('active');
+        pauseButton.classList.remove('inactive');
+        startButton.classList.add('inactive');
+    }
 }
 
 // Function to toggle brown noise
@@ -101,21 +115,27 @@ function toggleBrownNoise(start) {
 
 // Start Button Event
 startButton.addEventListener('click', () => {
-    console.log('Start button clicked');
-    clearInterval(interval);
-    isWorkPeriod = true;
-    activateButton(startButton); // Activate start button
-    startTimer(workTime);
+    if (!interval && !isPaused) {
+        console.log('Start button clicked');
+        activateButton(startButton); // Activate start button
+        startTimer(workTime);
+    }
 });
 
-// Reset Button Event
-resetButton.addEventListener('click', () => {
-    console.log('Reset button clicked');
-    clearInterval(interval);
-    timerDisplay.textContent = '50:00';
-    isWorkPeriod = true;
-    pomodoroCount = 0; // Reset Pomodoro count
-    resetPomodoroDots(); // Reset progress dots
-    toggleBrownNoise(false); // Stop brown noise when resetting
-    activateButton(resetButton); // Activate reset button
+// Pause Button Event
+pauseButton.addEventListener('click', () => {
+    if (interval && !isPaused) {
+        console.log('Pause button clicked');
+        clearInterval(interval);
+        interval = null; // Clear interval
+        toggleBrownNoise(false); // Stop brown noise
+        isPaused = true; // Set paused state
+        activateButton(pauseButton); // Activate pause button
+    } else if (!interval && isPaused) {
+        console.log('Resuming timer');
+        isPaused = false; // Unpause
+        toggleBrownNoise(true); // Start brown noise
+        startTimer(remainingTime); // Resume timer from remaining time
+        activateButton(startButton); // Activate start button
+    }
 });

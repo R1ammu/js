@@ -70,6 +70,14 @@ body {
     color: #FF4F00; /* Change SVG color when button is active */
 }
 
+.timerContainer button.inactive {
+    border-color: white;
+}
+
+.timerContainer button.inactive svg {
+    color: white; /* Change SVG color when button is inactive */
+}
+
 .size-6 {
     width: 120px;
     height: 120px;

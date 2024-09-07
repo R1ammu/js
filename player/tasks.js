@@ -22,19 +22,21 @@ function renderTasks(tasks) {
     tasksToRender.forEach((task, index) => {
         const li = document.createElement('li');
         li.textContent = task.text;
+
+        // Apply styles based on task state
         if (task.completed) {
             li.classList.add('completed-task');
         }
 
         // Click handler to change color and cross out on first click, remove on second click
-        let clickCount = 0;
         li.addEventListener('click', () => {
-            clickCount++;
-            if (clickCount === 1) {
-                // First click: change color and cross out
+            if (!task.completed) {
+                // Mark task as completed
+                task.completed = true;
                 li.classList.add('completed-task');
-            } else if (clickCount === 2) {
-                // Second click: remove the task
+                saveTasks(tasks); // Update localStorage
+            } else {
+                // Remove task on the second click
                 tasks.splice(index, 1); // Remove task from array
                 saveTasks(tasks); // Update localStorage
                 renderTasks(tasks); // Re-render task list
