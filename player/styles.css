@@ -1,6 +1,5 @@
 * {
     box-sizing: border-box;
-    /* border: solid red 2px; */
     border: none;
     margin: 10px;
     padding: 0px;
@@ -34,12 +33,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: none; /* Ensure button background is transparent */
 }
-  
+
+.timerContainer button.active {
+    border-color: #FF4F00;
+}
+
+.timerContainer button.active svg {
+    color: #FF4F00; /* Change SVG color when button is active */
+}
+
 .size-6 {
     width: 120px;
     height: 120px;
-    color: white;
+    color: white; /* Default icon color */
 }
 
 .timerButtonsContainer {
@@ -50,46 +58,6 @@ body {
     font-size: 150px;
     font-weight: 900;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Pomodoro Dots */
 .dots-container {
@@ -107,4 +75,36 @@ body {
 
 .dot.completed {
     background-color: #FF4F00;
+}
+
+/* Task List */
+.completed-task {
+    text-decoration: line-through;
+    color: #FF4F00;
+}
+
+#tasks {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Full width to accommodate task input width */
+}
+
+#tasks li {
+    cursor: pointer; /* Change cursor to pointer */
+    margin-bottom: 30px; /* Add 30px margin between tasks */
+}
+
+/* Task Input */
+#taskInput {
+    height: 60px; /* Set height of input */
+    width: 100%; /* Ensure input is full width */
+    margin-top: 10px; /* Space between input and tasks */
+}
+
+/* Move the input below tasks */
+.taskListContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

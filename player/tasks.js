@@ -22,7 +22,7 @@ function renderTasks(tasks) {
         const li = document.createElement('li');
         li.textContent = task.text;
         if (task.completed) {
-            li.classList.add('completed');
+            li.classList.add('completed-task');
         }
 
         // Toggle task completion on click
@@ -32,7 +32,8 @@ function renderTasks(tasks) {
             renderTasks(tasks);
         });
 
-        tasksUl.appendChild(li);
+        // Prepend new tasks to the beginning of the list
+        tasksUl.insertBefore(li, tasksUl.firstChild);
     });
 }
 
@@ -44,7 +45,7 @@ renderTasks(tasks);
 function addTask() {
     const taskText = taskInput.value.trim();
     if (taskText) {
-        tasks.push({ text: taskText, completed: false });
+        tasks.unshift({ text: taskText, completed: false }); // Add new tasks at the beginning
         saveTasks(tasks);
         renderTasks(tasks);
         taskInput.value = ''; // Clear input field

@@ -1,23 +1,3 @@
-// PLAYER
-const audioElement = document.querySelector('#brownNoise');
-const notificationSound = new Audio('/js/player/audio/notification.mp3');
-
-// Set the volume to maximum
-audioElement.volume = 1.0;
-notificationSound.volume = 1.0;
-
-// Toggle brown noise
-function toggleBrownNoise(play) {
-    if (play) {
-        audioElement.currentTime = 0; // Reset to start
-        audioElement.play().catch(error => {
-            console.error('Error playing audio:', error);
-        });
-    } else {
-        audioElement.pause();
-    }
-}
-
 // TIMER
 const workTime = 50 * 60; // 50 minutes in seconds
 const shortBreakTime = 5 * 60; // 5 minutes in seconds
@@ -100,11 +80,19 @@ function resetPomodoroDots() {
     dots.forEach(dot => dot.classList.remove('completed'));
 }
 
+// Function to activate a button
+function activateButton(button) {
+    startButton.classList.remove('active');
+    resetButton.classList.remove('active');
+    button.classList.add('active');
+}
+
 // Start Button Event
 startButton.addEventListener('click', () => {
     console.log('Start button clicked');
     clearInterval(interval);
     isWorkPeriod = true;
+    activateButton(startButton); // Activate start button
     startTimer(workTime);
 });
 
@@ -118,7 +106,5 @@ resetButton.addEventListener('click', () => {
     resetPomodoroDots(); // Reset progress dots
     toggleBrownNoise(false); // Stop brown noise when resetting
     audioElement.currentTime = 0; // Reset the audio to the beginning
+    activateButton(resetButton); // Activate reset button
 });
-
-// Remove Stop Button (if you have it in HTML)
-document.getElementById('stopButton').style.display = 'none'; // Hide stop button
