@@ -1,135 +1,144 @@
-const workTime = 50 * 60; // 50 minutes in seconds
-const shortBreakTime = 5 * 60; // 5 minutes in seconds
-const longBreakTime = 20 * 60; // 20 minutes in seconds
-let isWorkPeriod = true;
-let interval;
-let pomodoroCount = 0; // Track number of completed Pomodoros
-let isPaused = false; // Track if the timer is paused
-let remainingTime; // Track remaining time when paused
+// pomodoro.js
 
+let pomodoroDuration = 50 * 60; // 50 minutes in seconds
+let shortBreakDuration = 5 * 60; // 5 minutes in seconds
+let longBreakDuration = 20 * 60; // 20 minutes in seconds
+let isPaused = false;
+let isRunning = false;
+let timer; // Holds the current interval timer
+let currentPhase = 'pomodoro'; // 'pomodoro', 'shortBreak', 'longBreak'
+let pomodorosCompleted = 0;
+let skipTime = 0;
+let currentDot = 1;
+
+// Get elements from the DOM
 const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('startButton');
 const pauseButton = document.getElementById('pauseButton');
+const skipButton = document.getElementById('skipButton');
 const dots = document.querySelectorAll('.dot');
-const brownNoise = document.getElementById('brownNoise');
-const notificationSound = document.getElementById('notificationSound');
+const pomodoroCounterDisplay = document.getElementById('pomodoroCounter');
 
-// Function to update the timer display
-function updateTimerDisplay(timeLeft) {
-    let minutes = Math.floor(timeLeft / 60);
-    let seconds = timeLeft % 60;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    timerDisplay.textContent = `${minutes}:${seconds}`;
+// Initialize pomodoro counter from local storage
+let allTimePomodoros = localStorage.getItem('allTimePomodoros') || 0;
+pomodoroCounterDisplay.innerText = `All Time: ${allTimePomodoros}`;
+
+// Update the timer display
+function updateTimerDisplay(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    let remainingSeconds = seconds % 60;
+    timerDisplay.innerText = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 }
 
-// Function to start the timer
-function startTimer(duration) {
-    let timeLeft = duration;
-    remainingTime = timeLeft; // Store remaining time
-    updateTimerDisplay(timeLeft); // Immediately update the display
-    toggleBrownNoise(true); // Start brown noise when timer starts
+// Start or resume the timer
+function startTimer() {
+    if (!isRunning) {
+        isRunning = true;
+        startButton.disabled = true; // Disable start button to prevent multiple presses
+        timer = setInterval(() => {
+            if (pomodoroDuration > 0) {
+                pomodoroDuration--;
+                updateTimerDisplay(pomodoroDuration);
+                updateDots(pomodoroDuration, 'pomodoro');
+            } else if (currentPhase === 'pomodoro') {
+                pomodorosCompleted++;
+                updatePomodoroCounter();
+                clearInterval(timer);
+                isRunning = false;
+                startBreak();
+            }
+        }, 1000);
+    }
+}
 
-    interval = setInterval(() => {
-        if (!isPaused) { // Only decrement time if not paused
-            timeLeft--;
-            updateTimerDisplay(timeLeft);
-            remainingTime = timeLeft; // Update remaining time
+// Pause or resume the timer when the pause button is pressed
+function togglePause() {
+    if (isRunning) {
+        clearInterval(timer); // Pause the timer
+        isRunning = false;
+        isPaused = true;
+    } else if (isPaused) {
+        startTimer(); // Resume the timer
+        isPaused = false;
+    }
+}
 
-            if (timeLeft < 0) {
-                clearInterval(interval);
-                handleTimerCompletion();
+// Update dots opacity
+function updateDots(timeLeft, phase) {
+    let totalDuration = phase === 'pomodoro' ? 50 * 60 : (phase === 'shortBreak' ? 5 * 60 : 20 * 60);
+    let progress = (totalDuration - timeLeft) / totalDuration;
+    dots[currentDot - 1].style.opacity = progress.toString();
+}
+
+// Skip the current break and transfer the time to the next break
+function skipBreak() {
+    if (currentPhase === 'shortBreak' || currentPhase === 'longBreak') {
+        skipTime += (currentPhase === 'shortBreak') ? shortBreakDuration : longBreakDuration;
+        clearInterval(timer);
+        isRunning = false;
+        if (currentPhase === 'shortBreak') {
+            startLongBreak();
+        } else {
+            startPomodoro();
+        }
+    }
+}
+
+// Start a short break
+function startBreak() {
+    currentPhase = 'shortBreak';
+    shortBreakDuration += skipTime; // Add any skipped time
+    timer = setInterval(() => {
+        if (shortBreakDuration > 0) {
+            shortBreakDuration--;
+            updateTimerDisplay(shortBreakDuration);
+            updateDots(shortBreakDuration, 'shortBreak');
+        } else {
+            clearInterval(timer);
+            currentDot++;
+            if (pomodorosCompleted % 3 === 0) {
+                startLongBreak();
+            } else {
+                startPomodoro();
             }
         }
     }, 1000);
 }
 
-// Handle what happens when the timer completes
-function handleTimerCompletion() {
-    notificationSound.play(); // Play notification sound
-    toggleBrownNoise(false); // Stop brown noise
-
-    if (isWorkPeriod) {
-        pomodoroCount++;
-        updatePomodoroDots(pomodoroCount);
-
-        if (pomodoroCount === 4) {
-            startBreak(longBreakTime); // Start long break after 4 Pomodoros
-            pomodoroCount = 0; // Reset Pomodoro count after long break
-            resetPomodoroDots();
+// Start a long break
+function startLongBreak() {
+    currentPhase = 'longBreak';
+    longBreakDuration += skipTime; // Add any skipped time
+    timer = setInterval(() => {
+        if (longBreakDuration > 0) {
+            longBreakDuration--;
+            updateTimerDisplay(longBreakDuration);
+            updateDots(longBreakDuration, 'longBreak');
         } else {
-            startBreak(shortBreakTime); // Start short break
+            clearInterval(timer);
+            startPomodoro();
         }
-    } else {
-        startTimer(workTime); // Start new work session
-    }
-
-    isWorkPeriod = !isWorkPeriod; // Toggle between work and break
+    }, 1000);
 }
 
-// Function to start break
-function startBreak(breakTime) {
-    toggleBrownNoise(false); // Stop brown noise for breaks
-    startTimer(breakTime); // Start the break timer
+// Start a new Pomodoro
+function startPomodoro() {
+    currentPhase = 'pomodoro';
+    pomodoroDuration = 50 * 60;
+    startTimer();
 }
 
-// Update Pomodoro progress dots based on completed sessions
-function updatePomodoroDots(count) {
-    if (count <= 4) {
-        dots[count - 1].classList.add('completed');
-    }
+// Update Pomodoro counter
+function updatePomodoroCounter() {
+    allTimePomodoros++;
+    localStorage.setItem('allTimePomodoros', allTimePomodoros);
+    pomodoroCounterDisplay.innerText = `All Time: ${allTimePomodoros}`;
 }
 
-// Reset the Pomodoro progress dots to their original state
-function resetPomodoroDots() {
-    dots.forEach(dot => dot.classList.remove('completed'));
-}
+// Event Listeners
+startButton.addEventListener('click', startTimer);
+pauseButton.addEventListener('click', togglePause);
+skipButton.addEventListener('click', skipBreak);
 
-// Function to toggle brown noise
-function toggleBrownNoise(start) {
-    if (start) {
-        brownNoise.play();
-        brownNoise.loop = true; // Ensure brown noise loops
-    } else {
-        brownNoise.pause();
-        brownNoise.currentTime = 0; // Reset brown noise to start
-    }
-}
-
-// Function to activate a button
-function activateButton(button) {
-    if (button === startButton) {
-        startButton.classList.add('active');
-        pauseButton.classList.remove('active');
-        startButton.classList.remove('inactive');
-        pauseButton.classList.add('inactive');
-    } else {
-        pauseButton.classList.add('active');
-        startButton.classList.remove('active');
-        pauseButton.classList.remove('inactive');
-        startButton.classList.add('inactive');
-    }
-}
-
-// Start Button Event
-startButton.addEventListener('click', () => {
-    if (!interval && !isPaused) {
-        activateButton(startButton); // Activate start button
-        startTimer(workTime);
-    }
-});
-
-// Pause Button Event
-pauseButton.addEventListener('click', () => {
-    if (interval && !isPaused) {
-        clearInterval(interval);
-        interval = null; // Clear interval
-        toggleBrownNoise(false); // Stop brown noise
-        isPaused = true; // Set paused state
-        activateButton(pauseButton); // Activate pause button
-    } else if (!interval && isPaused) {
-        isPaused = false; // Unpause
-        toggleBrownNoise(true); // Start brown noise
-        startTimer(remainingTime); // Resume timer from remaining time
-        activateButton(startButton); // Activate start button
-    }
-});
+// Initial setup
+updateTimerDisplay(pomodoroDuration);
