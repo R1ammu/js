@@ -26,8 +26,6 @@ function updateTimerDisplay(timeLeft) {
 function startTimer(duration) {
     let timeLeft = duration;
     remainingTime = timeLeft; // Store remaining time
-    console.log('Timer started');
-
     updateTimerDisplay(timeLeft); // Immediately update the display
     toggleBrownNoise(true); // Start brown noise when timer starts
 
@@ -47,7 +45,6 @@ function startTimer(duration) {
 
 // Handle what happens when the timer completes
 function handleTimerCompletion() {
-    console.log('Timer completed');
     notificationSound.play(); // Play notification sound
     toggleBrownNoise(false); // Stop brown noise
 
@@ -69,7 +66,7 @@ function handleTimerCompletion() {
     isWorkPeriod = !isWorkPeriod; // Toggle between work and break
 }
 
-// Function to start break automatically
+// Function to start break
 function startBreak(breakTime) {
     toggleBrownNoise(false); // Stop brown noise for breaks
     startTimer(breakTime); // Start the break timer
@@ -87,6 +84,17 @@ function resetPomodoroDots() {
     dots.forEach(dot => dot.classList.remove('completed'));
 }
 
+// Function to toggle brown noise
+function toggleBrownNoise(start) {
+    if (start) {
+        brownNoise.play();
+        brownNoise.loop = true; // Ensure brown noise loops
+    } else {
+        brownNoise.pause();
+        brownNoise.currentTime = 0; // Reset brown noise to start
+    }
+}
+
 // Function to activate a button
 function activateButton(button) {
     if (button === startButton) {
@@ -102,21 +110,9 @@ function activateButton(button) {
     }
 }
 
-// Function to toggle brown noise
-function toggleBrownNoise(start) {
-    if (start) {
-        brownNoise.play();
-        brownNoise.loop = true; // Ensure brown noise loops
-    } else {
-        brownNoise.pause();
-        brownNoise.currentTime = 0; // Reset brown noise to start
-    }
-}
-
 // Start Button Event
 startButton.addEventListener('click', () => {
     if (!interval && !isPaused) {
-        console.log('Start button clicked');
         activateButton(startButton); // Activate start button
         startTimer(workTime);
     }
@@ -125,14 +121,12 @@ startButton.addEventListener('click', () => {
 // Pause Button Event
 pauseButton.addEventListener('click', () => {
     if (interval && !isPaused) {
-        console.log('Pause button clicked');
         clearInterval(interval);
         interval = null; // Clear interval
         toggleBrownNoise(false); // Stop brown noise
         isPaused = true; // Set paused state
         activateButton(pauseButton); // Activate pause button
     } else if (!interval && isPaused) {
-        console.log('Resuming timer');
         isPaused = false; // Unpause
         toggleBrownNoise(true); // Start brown noise
         startTimer(remainingTime); // Resume timer from remaining time
