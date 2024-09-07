@@ -2,13 +2,14 @@
     box-sizing: border-box;
     /* border: solid red 2px; */
     border: none;
-    margin: 5px;
+    margin: 10px;
     padding: 0px;
 
     background-color: #212121;
     color: white;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 30px;
+    font-weight: 500;
 }
 
 body {
@@ -22,25 +23,6 @@ body {
     justify-content: center;
     align-items: center;
     flex: 1;
-}
-
-/* Pomodoro Dots */
-.dots-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.dot {
-    height: 20px;
-    width: 20px;
-    background-color: lightgray;
-    border-radius: 50%;
-    margin: 0 5px;
-}
-
-.dot.completed {
-    background-color: green;
 }
 
 .timerContainer button {
@@ -66,4 +48,63 @@ body {
 
 #timer {
     font-size: 150px;
+    font-weight: 900;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Pomodoro Dots */
+.dots-container {
+    display: flex;
+    justify-content: center;
+}
+
+.dot {
+    height: 30px;
+    width: 30px;
+    background-color: lightgray;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.dot.completed {
+    background-color: #FF4F00;
 }
