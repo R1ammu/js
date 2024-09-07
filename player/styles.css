@@ -30,7 +30,34 @@ body {
     font-weight: 500;
 }
 
+ul {
+    list-style-type: none;
+}
+
+#taskInput {
+    height: 60px; /* Set height of input */
+    width: 100%; /* Ensure input is full width */
+    margin-top: 16px; /* Space between input and tasks */
+    text-align: center; /* Center text in input */
+    padding: 0; /* Padding to ensure text doesn’t touch the edges */
+    width: 600px;
+}
+
+.completed-task {
+    text-decoration: line-through; /* Adds a line through the text */
+    color: #FF4F00; /* Optional: Change color to indicate completion */
+}
+
+
 /* TIMER */
+.timerContainer button.active {
+    border-color: #FF4F00;
+}
+
+.timerContainer button.inactive {
+    border-color: white; /* Default border color */
+}
+
 #clock {
     font-size: 9em;
     font-weight: 800;
