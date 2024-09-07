@@ -1,6 +1,6 @@
 // PLAYER
 const audioElement = document.querySelector('#brownNoise');
-const notificationSound = new Audio('/js/player/audio/level-up-191997.mp3');
+const notificationSound = new Audio('/js/player/audio/notification.mp3');
 
 // Toggle brown noise
 function toggleBrownNoise() {
