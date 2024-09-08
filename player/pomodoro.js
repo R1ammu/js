@@ -56,6 +56,23 @@ function updateTimerColor() {
     }
 }
 
+// Update dots opacity and animation
+function updateDots(timeLeft, phase) {
+    dots.forEach((dot, index) => {
+        if (index + 1 === currentDot) {
+            dot.style.backgroundColor = 'white'; // Ensure dot color is white
+            if (phase === 'pomodoro') {
+                dot.classList.add('active'); // Add animation class
+            } else {
+                dot.classList.remove('active'); // Remove animation class during breaks
+            }
+        } else {
+            dot.style.backgroundColor = 'white'; // Ensure color is white
+            dot.classList.remove('active'); // Remove animation class for inactive dots
+        }
+    });
+}
+
 // Start or resume the timer
 function startTimer() {
     if (!isRunning) {
@@ -109,16 +126,6 @@ function togglePause() {
         isPaused = false;
     }
     updateButtonStyles(); // Update button styles
-}
-
-// Update dots opacity
-function updateDots(timeLeft, phase) {
-    let totalDuration = phase === 'pomodoro' ? 60 : (phase === 'shortBreak' ? 5 * 60 : 20 * 60);
-    let progress = (totalDuration - timeLeft) / totalDuration;
-    for (let i = 0; i < dots.length; i++) {
-        dots[i].style.opacity = i < currentDot ? '1' : '0.3';
-        dots[i].style.backgroundColor = phase === 'pomodoro' ? '#FF4F00' : (phase === 'shortBreak' ? '#4CAF50' : '#FFC107');
-    }
 }
 
 // Start a short break
