@@ -9,7 +9,6 @@ let isRunning = false;
 let isPaused = false;
 let currentPhase = 'pomodoro'; // 'pomodoro', 'shortBreak', or 'longBreak'
 let pomodorosCompleted = 0;
-let skipTime = 0;
 let remainingTime = 0; // Time left in the current session
 
 // Get elements from the DOM
@@ -59,6 +58,8 @@ function startTimer() {
         // Use remainingTime if resuming
         duration = remainingTime > 0 ? remainingTime : duration;
 
+        updateTimerDisplay(duration); // Ensure timer display is updated
+
         timer = setInterval(() => {
             duration--;
             remainingTime = duration; // Track remaining time
@@ -107,7 +108,9 @@ function handleEndOfSession() {
         } else {
             currentPhase = 'shortBreak';
         }
-    } else if (currentPhase === 'shortBreak' || currentPhase === 'longBreak') {
+    } else if (currentPhase === 'shortBreak') {
+        currentPhase = 'pomodoro';
+    } else if (currentPhase === 'longBreak') {
         currentPhase = 'pomodoro';
     }
 
@@ -135,8 +138,13 @@ function updateButtonStyles() {
 
 // Update timer color
 function updateTimerColor() {
-    timerDisplay.classList.toggle('pomodoro-text', currentPhase === 'pomodoro');
-    timerDisplay.classList.toggle('break-text', currentPhase === 'shortBreak' || currentPhase === 'longBreak');
+    if (currentPhase === 'pomodoro') {
+        timerDisplay.classList.add('pomodoro-text');
+        timerDisplay.classList.remove('break-text');
+    } else {
+        timerDisplay.classList.add('break-text');
+        timerDisplay.classList.remove('pomodoro-text');
+    }
 }
 
 // Event listeners
@@ -148,10 +156,19 @@ pauseButton.addEventListener('click', () => {
     togglePause();
 });
 
+// Skip button event listener
 skipButton.addEventListener('click', () => {
     if (currentPhase === 'shortBreak' || currentPhase === 'longBreak') {
-        clearInterval(timer); // Stop the current timer
-        handleEndOfSession(); // Skip to the next Pomodoro
+        clearInterval(timer); // Stop the current break timer
+        remainingTime = 0; // Reset remaining time
+        currentPhase = 'pomodoro'; // Set phase to Pomodoro
+        updateTimerDisplay(POMODORO_DURATION); // Update display to Pomodoro duration
+        updateTimerColor(); // Update color to Pomodoro
+
+        // Ensure that the timer starts immediately
+        isRunning = false; // Force stop if it was running
+        isPaused = false; // Ensure it's not paused
+        startTimer(); // Start the Pomodoro timer
     }
 });
 
