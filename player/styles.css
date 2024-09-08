@@ -31,8 +31,13 @@ body {
 }
 
 ul {
-    list-style-type: none;
-    margin: 1em 0;
+    list-style-type:upper-roman;
+    margin: 2em 0em;
+}
+
+#tasks {
+    max-width: 1000px;
+    cursor: pointer;
 }
 
 #taskInput {
@@ -59,7 +64,7 @@ ul {
 }
 
 .timerContainer button.active {
-    border-color: #FF4F00;
+    border-color: rgba(255, 79, 0, 0); /* Make the border invisible */
 }
 
 .timerContainer button.inactive {
@@ -79,18 +84,23 @@ ul {
 .dots-container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+}
+
+.rowOne, .rowTwo, .rowThree {
+    display: flex;
 }
 
 .dot {
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
-    margin: 0 10px;
+    margin: 1em;
     background-color: transparent; /* Default color */
 }
 
 #startButton.active, #pauseButton.active {
-    border-color: #FF4F00;
+    border-color: rgba(255, 79, 0, 0); /* Invisible when active */
 }
 
 .size-6 {
@@ -101,5 +111,9 @@ ul {
 #pomodoroCounter {
     font-size: 3em;
     font-weight: 500;
+    margin: 1em;
 }
 
+button {
+    margin: 0.5em;
+}

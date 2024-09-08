@@ -1,4 +1,4 @@
-let pomodoroDuration = 50 * 60; // 50 minutes in seconds
+let pomodoroDuration = 60; // 1 minute in seconds
 let shortBreakDuration = 5 * 60; // 5 minutes in seconds
 let longBreakDuration = 20 * 60; // 20 minutes in seconds
 let isPaused = false;
@@ -33,9 +33,16 @@ function updateButtonStyles() {
     if (isRunning) {
         startButton.classList.add('active');
         pauseButton.classList.remove('active');
-    } else {
-        startButton.classList.remove('active');
+        startButton.style.borderColor = 'rgba(255, 79, 0, 0)'; // Set border color to 0 opacity
+        pauseButton.style.borderColor = 'white'; // Reset pause button border
+    } else if (isPaused) {
         pauseButton.classList.add('active');
+        startButton.classList.remove('active');
+        pauseButton.style.borderColor = 'rgba(255, 79, 0, 0)'; // Set border color to 0 opacity
+        startButton.style.borderColor = 'white'; // Reset start button border
+    } else {
+        startButton.style.borderColor = 'white'; // Reset both to white when inactive
+        pauseButton.style.borderColor = 'white';
     }
 }
 
@@ -43,6 +50,7 @@ function updateButtonStyles() {
 function startTimer() {
     if (!isRunning) {
         isRunning = true;
+        isPaused = false;
         updateButtonStyles(); // Update button styles
         timer = setInterval(() => {
             if (pomodoroDuration > 0) {
@@ -65,6 +73,7 @@ function togglePause() {
     if (isRunning) {
         clearInterval(timer); // Pause the timer
         isRunning = false;
+        isPaused = true;
     } else if (isPaused) {
         startTimer(); // Resume the timer
         isPaused = false;
@@ -74,7 +83,7 @@ function togglePause() {
 
 // Update dots opacity
 function updateDots(timeLeft, phase) {
-    let totalDuration = phase === 'pomodoro' ? 50 * 60 : (phase === 'shortBreak' ? 5 * 60 : 20 * 60);
+    let totalDuration = phase === 'pomodoro' ? 60 : (phase === 'shortBreak' ? 5 * 60 : 20 * 60);
     let progress = (totalDuration - timeLeft) / totalDuration;
     for (let i = 0; i < dots.length; i++) {
         dots[i].style.opacity = i < currentDot ? '1' : '0.3';
@@ -82,18 +91,14 @@ function updateDots(timeLeft, phase) {
     }
 }
 
-// Skip the current break and transfer the time to the next break
+// Fix for skipping break: Skip current break and add time to the next break
 function skipBreak() {
     if (currentPhase === 'shortBreak' || currentPhase === 'longBreak') {
         skipTime += (currentPhase === 'shortBreak') ? shortBreakDuration : longBreakDuration;
         clearInterval(timer);
         isRunning = false;
         updateButtonStyles(); // Update button styles
-        if (currentPhase === 'shortBreak') {
-            startLongBreak();
-        } else {
-            startPomodoro();
-        }
+        startPomodoro(); // Start new Pomodoro and add skipped time to the next break
     }
 }
 
@@ -137,7 +142,7 @@ function startLongBreak() {
 // Start a new Pomodoro
 function startPomodoro() {
     currentPhase = 'pomodoro';
-    pomodoroDuration = 50 * 60;
+    pomodoroDuration = 60; // Reset to 1 minute
     startTimer();
 }
 
