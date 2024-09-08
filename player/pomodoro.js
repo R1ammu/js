@@ -1,5 +1,5 @@
 let pomodoroDuration = 60; // 1 minute in seconds
-let shortBreakDuration = 5 * 60; // 5 minutes in seconds
+let shortBreakDuration = 1 * 60; // 1 minute in seconds
 let longBreakDuration = 20 * 60; // 20 minutes in seconds
 let isPaused = false;
 let isRunning = false;
@@ -7,13 +7,13 @@ let timer; // Holds the current interval timer
 let currentPhase = 'pomodoro'; // 'pomodoro', 'shortBreak', 'longBreak'
 let pomodorosCompleted = 0;
 let skipTime = 0;
-let currentDot = 1;
+let currentDot = 1; // Keeps track of the current dot to activate
 
 // Get elements from the DOM
 const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('startButton');
 const pauseButton = document.getElementById('pauseButton');
-const dots = document.querySelectorAll('.dot');
+const dots = document.querySelectorAll('.dot'); // Assuming dots are selected by class .dot
 const pomodoroCounterDisplay = document.getElementById('pomodoroCounter');
 
 // Initialize pomodoro counter from local storage
@@ -56,21 +56,15 @@ function updateTimerColor() {
     }
 }
 
-// Update dots opacity and animation
-function updateDots(timeLeft, phase) {
-    dots.forEach((dot, index) => {
-        if (index + 1 === currentDot) {
-            dot.style.backgroundColor = 'white'; // Ensure dot color is white
-            if (phase === 'pomodoro') {
-                dot.classList.add('active'); // Add animation class
-            } else {
-                dot.classList.remove('active'); // Remove animation class during breaks
-            }
-        } else {
-            dot.style.backgroundColor = 'white'; // Ensure color is white
-            dot.classList.remove('active'); // Remove animation class for inactive dots
+// Update dot opacity after each Pomodoro
+function updateDotsAfterPomodoro() {
+    if (currentDot <= 12) {
+        const dot = document.getElementById(`dot${currentDot}`);
+        if (dot) {
+            dot.style.opacity = '100%'; // Set opacity to 100%
         }
-    });
+        currentDot++;
+    }
 }
 
 // Start or resume the timer
@@ -84,17 +78,16 @@ function startTimer() {
             if (currentPhase === 'pomodoro' && pomodoroDuration > 0) {
                 pomodoroDuration--;
                 updateTimerDisplay(pomodoroDuration);
-                updateDots(pomodoroDuration, 'pomodoro');
             } else if (currentPhase === 'pomodoro') {
                 pomodorosCompleted++;
                 updatePomodoroCounter();
+                updateDotsAfterPomodoro(); // Update dot opacity after Pomodoro
                 clearInterval(timer);
                 isRunning = false;
                 startBreak();
             } else if (currentPhase === 'shortBreak' && shortBreakDuration > 0) {
                 shortBreakDuration--;
                 updateTimerDisplay(shortBreakDuration);
-                updateDots(shortBreakDuration, 'shortBreak');
             } else if (currentPhase === 'shortBreak') {
                 clearInterval(timer);
                 currentDot++;
@@ -106,7 +99,6 @@ function startTimer() {
             } else if (currentPhase === 'longBreak' && longBreakDuration > 0) {
                 longBreakDuration--;
                 updateTimerDisplay(longBreakDuration);
-                updateDots(longBreakDuration, 'longBreak');
             } else if (currentPhase === 'longBreak') {
                 clearInterval(timer);
                 startPomodoro();
