@@ -117,3 +117,11 @@ ul {
 button {
     margin: 0.5em;
 }
+
+.pomodoro-text {
+    color: #FF4F00; /* Pomodoro text color */
+}
+
+.break-text {
+    color: #4CAF50; /* Break text color */
+}

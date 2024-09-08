@@ -13,7 +13,6 @@ let currentDot = 1;
 const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('startButton');
 const pauseButton = document.getElementById('pauseButton');
-const skipButton = document.getElementById('skipButton');
 const dots = document.querySelectorAll('.dot');
 const pomodoroCounterDisplay = document.getElementById('pomodoroCounter');
 
@@ -46,14 +45,26 @@ function updateButtonStyles() {
     }
 }
 
+// Update timer color based on phase
+function updateTimerColor() {
+    if (currentPhase === 'pomodoro') {
+        timerDisplay.classList.add('pomodoro-text');
+        timerDisplay.classList.remove('break-text');
+    } else {
+        timerDisplay.classList.add('break-text');
+        timerDisplay.classList.remove('pomodoro-text');
+    }
+}
+
 // Start or resume the timer
 function startTimer() {
     if (!isRunning) {
         isRunning = true;
         isPaused = false;
         updateButtonStyles(); // Update button styles
+        updateTimerColor();  // Update timer color
         timer = setInterval(() => {
-            if (pomodoroDuration > 0) {
+            if (currentPhase === 'pomodoro' && pomodoroDuration > 0) {
                 pomodoroDuration--;
                 updateTimerDisplay(pomodoroDuration);
                 updateDots(pomodoroDuration, 'pomodoro');
@@ -63,6 +74,25 @@ function startTimer() {
                 clearInterval(timer);
                 isRunning = false;
                 startBreak();
+            } else if (currentPhase === 'shortBreak' && shortBreakDuration > 0) {
+                shortBreakDuration--;
+                updateTimerDisplay(shortBreakDuration);
+                updateDots(shortBreakDuration, 'shortBreak');
+            } else if (currentPhase === 'shortBreak') {
+                clearInterval(timer);
+                currentDot++;
+                if (pomodorosCompleted % 3 === 0) {
+                    startLongBreak();
+                } else {
+                    startPomodoro();
+                }
+            } else if (currentPhase === 'longBreak' && longBreakDuration > 0) {
+                longBreakDuration--;
+                updateTimerDisplay(longBreakDuration);
+                updateDots(longBreakDuration, 'longBreak');
+            } else if (currentPhase === 'longBreak') {
+                clearInterval(timer);
+                startPomodoro();
             }
         }, 1000);
     }
@@ -91,58 +121,29 @@ function updateDots(timeLeft, phase) {
     }
 }
 
-// Fix for skipping break: Skip current break and add time to the next break
-function skipBreak() {
-    if (currentPhase === 'shortBreak' || currentPhase === 'longBreak') {
-        skipTime += (currentPhase === 'shortBreak') ? shortBreakDuration : longBreakDuration;
-        clearInterval(timer);
-        isRunning = false;
-        updateButtonStyles(); // Update button styles
-        startPomodoro(); // Start new Pomodoro and add skipped time to the next break
-    }
-}
-
 // Start a short break
 function startBreak() {
     currentPhase = 'shortBreak';
     shortBreakDuration += skipTime; // Add any skipped time
-    timer = setInterval(() => {
-        if (shortBreakDuration > 0) {
-            shortBreakDuration--;
-            updateTimerDisplay(shortBreakDuration);
-            updateDots(shortBreakDuration, 'shortBreak');
-        } else {
-            clearInterval(timer);
-            currentDot++;
-            if (pomodorosCompleted % 3 === 0) {
-                startLongBreak();
-            } else {
-                startPomodoro();
-            }
-        }
-    }, 1000);
+    skipTime = 0; // Reset skip time for the next cycle
+    updateTimerColor(); // Update timer color
+    startTimer();
 }
 
 // Start a long break
 function startLongBreak() {
     currentPhase = 'longBreak';
     longBreakDuration += skipTime; // Add any skipped time
-    timer = setInterval(() => {
-        if (longBreakDuration > 0) {
-            longBreakDuration--;
-            updateTimerDisplay(longBreakDuration);
-            updateDots(longBreakDuration, 'longBreak');
-        } else {
-            clearInterval(timer);
-            startPomodoro();
-        }
-    }, 1000);
+    skipTime = 0; // Reset skip time for the next cycle
+    updateTimerColor(); // Update timer color
+    startTimer();
 }
 
 // Start a new Pomodoro
 function startPomodoro() {
     currentPhase = 'pomodoro';
     pomodoroDuration = 60; // Reset to 1 minute
+    updateTimerColor(); // Update timer color
     startTimer();
 }
 
@@ -156,10 +157,10 @@ function updatePomodoroCounter() {
 // Event Listeners
 startButton.addEventListener('click', startTimer);
 pauseButton.addEventListener('click', togglePause);
-skipButton.addEventListener('click', skipBreak);
 
 // Initial setup
 updateTimerDisplay(pomodoroDuration);
+updateTimerColor(); // Set initial color based on default phase
 
 // Function to update the system time (without seconds)
 function updateClock() {
