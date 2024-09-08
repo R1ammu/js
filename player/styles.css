@@ -1,9 +1,11 @@
+/* General Styles */
 * {
     background-color: #1C1C1C;
     color: white;
     margin: 0px;
     padding: 0px;
     border: none;
+    /* border: red 1px solid; */
     box-sizing: border-box;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -11,7 +13,7 @@
 body {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     height: 100vh;
     width: 100vw;
 }
@@ -23,35 +25,48 @@ body {
     align-items: center;
 }
 
-/* TASKS */
-#tasks, #taskInput {
-    font-size: 3em;
-    font-weight: 500;
-    margin: 1em 0;
+h1 {
+   text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
-
-ul {
-    list-style-type:upper-roman;
-    margin: 2em 0em;
+/* TASKS */
+.taskListContainer {
+    width: 900px;
 }
 
 #tasks {
-    max-width: 1000px;
+    font-size: 3em;
+    font-weight: 500;
+    width: 900px;
     cursor: pointer;
+    margin-bottom: 1em;
+    list-style-type:none; /* Remove Roman numerals from list items */
+}
+
+.taskInputContainer {
+    display: flex;
+}
+    
+#taskCount {
+    width: 100px;
+    font-size: 3em;
+    font-weight: 500;
+    flex: 1 0 0;
 }
 
 #taskInput {
-    height: 60px; /* Set height of input */
-    width: 100%; /* Ensure input is full width */
-    margin-top: 16px; /* Space between input and tasks */
-    text-align: center; /* Center text in input */
-    padding: 0; /* Padding to ensure text doesn’t touch the edges */
-    width: 600px;
+    flex: 0 1 0;
+    width: 100%;
+    /* text-align: center; */
+    width: 800px;
+    font-size: 3em;
+    font-weight: 500;
 }
 
+/* Task completed style */
 .completed-task {
-    text-decoration: line-through; /* Adds a line through the text */
-    color: #FF4F00; /* Optional: Change color to indicate completion */
+    text-decoration: line-through;
+    color: #FF4F00;
 }
 
 /* TIMER */
@@ -64,19 +79,14 @@ ul {
 }
 
 .timerContainer button.active {
-    border-color: rgba(255, 79, 0, 0); /* Make the border invisible */
+    border-color: rgba(255, 79, 0, 0); /* Invisible when active */
 }
 
 .timerContainer button.inactive {
     border-color: white; /* Default border color */
 }
 
-#clock {
-    font-size: 9em;
-    font-weight: 800;
-}
-
-#timer {
+#clock, #timer {
     font-size: 9em;
     font-weight: 800;
 }
@@ -94,14 +104,14 @@ ul {
 .dot {
     width: 30px;
     height: 30px;
-    background-color: white; /* Default color for all dots */
+    background-color: white;
     border-radius: 50%;
     margin: 1em;
     opacity: 0;
 }
 
 #startButton.active, #pauseButton.active {
-    border-color: rgba(255, 79, 0, 0); /* Invisible when active */
+    border-color: rgba(255, 79, 0, 0);
 }
 
 .size-6 {
@@ -120,9 +130,9 @@ button {
 }
 
 .pomodoro-text {
-    color: #FF4F00; /* Pomodoro text color */
+    color: #FF4F00;
 }
 
 .break-text {
-    color: #4CAF50; /* Break text color */
+    color: #4CAF50;
 }
