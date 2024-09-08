@@ -90,7 +90,7 @@ function startTimer() {
                 updateTimerDisplay(shortBreakDuration);
             } else if (currentPhase === 'shortBreak') {
                 clearInterval(timer);
-                currentDot++;
+                shortBreakDuration = 1 * 60; // Reset short break duration
                 if (pomodorosCompleted % 3 === 0) {
                     startLongBreak();
                 } else {
@@ -101,6 +101,7 @@ function startTimer() {
                 updateTimerDisplay(longBreakDuration);
             } else if (currentPhase === 'longBreak') {
                 clearInterval(timer);
+                longBreakDuration = 20 * 60; // Reset long break duration
                 startPomodoro();
             }
         }, 1000);
