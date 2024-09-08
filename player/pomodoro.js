@@ -10,7 +10,6 @@ let isPaused = false;
 let currentPhase = 'pomodoro'; // 'pomodoro', 'shortBreak', or 'longBreak'
 let pomodorosCompleted = 0;
 let skipTime = 0;
-let currentDot = 1;
 let remainingTime = 0; // Time left in the current session
 
 // Get elements from the DOM
@@ -108,9 +107,7 @@ function handleEndOfSession() {
         } else {
             currentPhase = 'shortBreak';
         }
-    } else if (currentPhase === 'shortBreak') {
-        currentPhase = 'pomodoro';
-    } else if (currentPhase === 'longBreak') {
+    } else if (currentPhase === 'shortBreak' || currentPhase === 'longBreak') {
         currentPhase = 'pomodoro';
     }
 
@@ -153,8 +150,8 @@ pauseButton.addEventListener('click', () => {
 
 skipButton.addEventListener('click', () => {
     if (currentPhase === 'shortBreak' || currentPhase === 'longBreak') {
-        clearInterval(timer);
-        handleEndOfSession();
+        clearInterval(timer); // Stop the current timer
+        handleEndOfSession(); // Skip to the next Pomodoro
     }
 });
 
