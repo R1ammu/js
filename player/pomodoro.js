@@ -1,7 +1,7 @@
 // Constants for durations
-const POMODORO_DURATION = 50 * 60; // 10 seconds for testing
-const SHORT_BREAK_DURATION = 5 * 60; // 10 seconds for testing
-const LONG_BREAK_DURATION = 20 * 60; // 20 minutes in seconds
+const POMODORO_DURATION = 5;
+const SHORT_BREAK_DURATION = 5;
+const LONG_BREAK_DURATION = 20 * 60;
 
 // Variables
 let timer;
@@ -10,6 +10,8 @@ let isPaused = false;
 let currentPhase = 'pomodoro';
 let pomodorosCompleted = 0;
 let remainingTime = 0;
+let allowStart = true;  // Flag to control start button
+let allowPause = false; // Flag to control pause button
 
 // Get elements from the DOM
 const timerDisplay = document.getElementById('timer');
@@ -38,28 +40,24 @@ function updateTimerDisplay(seconds) {
 
 // Start or resume the timer
 function startTimer() {
-    // Ensure no other timers are running
-    if (timer) {
-        clearInterval(timer);
-    }
+    if (!allowStart) return; // Prevent starting multiple times consecutively
+
+    if (timer) clearInterval(timer);
 
     isRunning = true;
     isPaused = false;
+    allowStart = false;   // Disable start until pause is pressed
+    allowPause = true;    // Enable pause button after starting
     updateButtonStyles();
 
     let duration = currentPhase === 'pomodoro' ? POMODORO_DURATION
         : currentPhase === 'shortBreak' ? SHORT_BREAK_DURATION
         : LONG_BREAK_DURATION;
 
-    // Immediately update the display with the correct time
     updateTimerDisplay(duration);
-
-    // Set the timer display color
     timerDisplay.style.color = currentPhase === 'pomodoro' ? '#FF4F00' : '#4caf50';
 
-    if (currentPhase === 'pomodoro') {
-        brownNoise.play();
-    }
+    if (currentPhase === 'pomodoro') brownNoise.play();
 
     timer = setInterval(() => {
         duration--;
@@ -79,17 +77,19 @@ function startTimer() {
 
 // Handle pause
 function togglePause() {
+    if (!allowPause) return; // Prevent multiple consecutive pauses
+
     if (isRunning) {
         if (isPaused) {
-            // Resume the timer
-            startTimer();
+            startTimer(); // Resume the timer if paused
         } else {
-            // Pause the timer and reset the brown noise
             clearInterval(timer);
             isPaused = true;
+            allowPause = false;  // Disable pause until start is pressed again
+            allowStart = true;   // Enable start button after pausing
             updateButtonStyles();
             brownNoise.pause();
-            brownNoise.currentTime = 0; // Reset brown noise to start
+            brownNoise.currentTime = 0;
         }
     }
 }
@@ -97,27 +97,20 @@ function togglePause() {
 // Handle skip button functionality
 function skipSession() {
     if (currentPhase !== 'pomodoro') {
-        // Stop any ongoing timer
-        if (timer) {
-            clearInterval(timer);
-        }
+        if (timer) clearInterval(timer);
         brownNoise.pause();
         brownNoise.currentTime = 0;
 
-        // Prepare for the next Pomodoro session
         currentPhase = 'pomodoro';
         remainingTime = POMODORO_DURATION;
-
-        // Update the display immediately
         updateTimerDisplay(POMODORO_DURATION);
-        timerDisplay.style.color = '#FF4F00'; // Set color to orange
+        timerDisplay.style.color = '#FF4F00';
 
-        // Reset flags and start the timer
         isRunning = true;
         isPaused = false;
+        allowStart = false;
+        allowPause = true;
         updateButtonStyles();
-
-        // Start the new Pomodoro session immediately
         startTimer();
     }
 }
@@ -136,15 +129,28 @@ function handleEndOfSession() {
         currentPhase = 'pomodoro';
         notificationSound.play();
     }
-    // Start the next timer based on the new phase
     startTimer();
 }
 
 // Update button styles
 function updateButtonStyles() {
-    startButton.classList.toggle('active', isRunning && !isPaused);
-    pauseButton.classList.toggle('active', isPaused);
+    // If the start button is pressed, hide its border (0px) and show the pause button's border (8px)
+    if (!allowStart) {
+        startButton.style.border = '8px solid rgba(255, 255, 255, 0)'; // Set border of start button to 0px
+        pauseButton.style.border = '8px solid rgba(255, 255, 255, 1)'; // Set border of pause button to 8px
+    } 
+    // If the pause button is pressed, hide its border (0px) and show the start button's border (8px)
+    else if (!allowPause) {
+        startButton.style.border = '8px solid rgba(255, 255, 255, 1)'; // Set border of start button to 8px
+        pauseButton.style.border = '8px solid rgba(255, 255, 255, 0)'; // Set border of pause button to 0px
+    } 
+    // Default state: Ensure both borders are 8px when no button is active
+    else {
+        startButton.style.border = '8px solid rgba(255, 255, 255, 1)'; // Ensure start button border is 8px
+        pauseButton.style.border = '8px solid rgba(255, 255, 255, 1)'; // Ensure pause button border is 8px
+    }
 }
+
 
 // Update dots opacity
 function updateDots() {
@@ -169,3 +175,4 @@ function updateClock() {
 
 updateClock();
 setInterval(updateClock, 60000);
+
