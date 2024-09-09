@@ -1,6 +1,6 @@
 // Constants for durations
-const POMODORO_DURATION = 5; // 50 minutes in seconds
-const SHORT_BREAK_DURATION = 5; // 5 minutes in seconds
+const POMODORO_DURATION = 5 * 60; // 5 minutes in seconds
+const SHORT_BREAK_DURATION = 5 * 60; // 5 minutes in seconds
 const LONG_BREAK_DURATION = 20 * 60; // 20 minutes in seconds
 
 // Variables
@@ -10,6 +10,7 @@ let isPaused = false;
 let currentPhase = 'pomodoro';
 let pomodorosCompleted = 0;
 let remainingTime = 0;
+let lastButtonPressed = ''; // Track the last button pressed
 
 // Get elements from the DOM
 const timerDisplay = document.getElementById('timer');
@@ -38,6 +39,8 @@ function updateTimerDisplay(seconds) {
 
 // Start or resume the timer
 function startTimer() {
+    if (lastButtonPressed === 'start') return; // Prevent startButton from being pressed consecutively
+
     // Ensure no other timers are running
     if (timer) {
         clearInterval(timer);
@@ -46,6 +49,7 @@ function startTimer() {
     isRunning = true;
     isPaused = false;
     updateButtonStyles();
+    lastButtonPressed = 'start';
 
     let duration = currentPhase === 'pomodoro' ? POMODORO_DURATION
         : currentPhase === 'shortBreak' ? SHORT_BREAK_DURATION
@@ -91,6 +95,7 @@ function togglePause() {
             brownNoise.pause();
             brownNoise.currentTime = 0; // Reset brown noise to start
         }
+        lastButtonPressed = 'pause'; // Update lastButtonPressed
     }
 }
 
@@ -116,6 +121,7 @@ function skipSession() {
         isRunning = true;
         isPaused = false;
         updateButtonStyles();
+        lastButtonPressed = 'skip'; // Update lastButtonPressed
 
         // Start the new Pomodoro session immediately
         startTimer();
